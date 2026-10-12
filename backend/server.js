@@ -28,7 +28,17 @@ app.use(express.json({ limit: '2mb' }));
 app.use(express.urlencoded({ extended: true }));
 
 /* ── Static frontend ─────────────────────────────────── */
-app.use(express.static(path.join(__dirname, '../frontend')));
+// When deployed with Root Directory = backend, frontend is at ../frontend (local)
+// or at the same level. We try both.
+const frontendDir = (() => {
+  const candidates = [
+    path.join(__dirname, '../frontend'),   // local / root-level deploy
+    path.join(__dirname, 'frontend'),      // frontend copied inside backend
+  ];
+  const fs = require('fs');
+  return candidates.find(p => fs.existsSync(path.join(p, 'index.html'))) || candidates[0];
+})();
+app.use(express.static(frontendDir));
 
 /* ── Health check ────────────────────────────────────── */
 app.get('/api/health', (_req, res) =>
@@ -46,7 +56,7 @@ app.use('/api/payments',  require('./routes/payments'));
 
 /* ── SPA fallback ────────────────────────────────────── */
 app.get('*', (_req, res) => {
-  res.sendFile(path.join(__dirname, '../frontend/index.html'));
+  res.sendFile(path.join(frontendDir, 'index.html'));
 });
 
 /* ── Global error handler ────────────────────────────── */
