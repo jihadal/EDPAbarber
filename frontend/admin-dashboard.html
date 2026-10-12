@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard — EDPAbarber</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="admin-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="admin-sidebar">
+    <div class="sidebar-logo"><span>EDPA</span>barber<span style="color:var(--gold)">.</span></div>
+    <div class="sidebar-section-label">Overview</div>
+    <ul class="sidebar-nav">
+      <li><a href="#" class="active" data-section="dashboard"><span class="nav-ico">📊</span> Dashboard</a></li>
+    </ul>
+    <div class="sidebar-section-label">Management</div>
+    <ul class="sidebar-nav">
+      <li><a href="#" data-section="bookings"><span class="nav-ico">📅</span> Bookings</a></li>
+      <li><a href="#" data-section="services"><span class="nav-ico">✂</span> Services</a></li>
+      <li><a href="#" data-section="barbers"><span class="nav-ico">👤</span> Barbers</a></li>
+      <li><a href="#" data-section="customers"><span class="nav-ico">🧑‍🤝‍🧑</span> Customers</a></li>
+      <li><a href="#" data-section="payments"><span class="nav-ico">💳</span> Payments</a></li>
+      <li><a href="#" data-section="calendar"><span class="nav-ico">🗓</span> Calendar</a></li>
+    </ul>
+    <div class="sidebar-footer">
+      <button class="btn btn-outline full btn-sm" data-logout>LOGOUT</button>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="admin-main">
+    <div class="admin-topbar">
+      <div class="admin-page-title" id="adminPageTitle">Dashboard</div>
+      <div style="display:flex;align-items:center;gap:14px">
+        <span style="font-size:12px;color:var(--muted)" id="adminUserLabel">Admin</span>
+        <div class="admin-user-badge" id="adminAvatar">A</div>
+      </div>
+    </div>
+
+    <div class="admin-content">
+
+      <!-- DASHBOARD SECTION -->
+      <div id="sec-dashboard" class="admin-section">
+        <div id="adminStats" class="stats-grid" style="margin-bottom:32px">
+          <div class="stat-card"><div class="stat-label">Booking Hari Ini</div><div class="stat-val stat-gold" id="s-today">—</div></div>
+          <div class="stat-card"><div class="stat-label">Booking Bulan Ini</div><div class="stat-val" id="s-month">—</div></div>
+          <div class="stat-card"><div class="stat-label">Total Pendapatan</div><div class="stat-val stat-gold" id="s-revenue" style="font-size:22px">—</div></div>
+          <div class="stat-card"><div class="stat-label">Total Customers</div><div class="stat-val stat-green" id="s-customers">—</div></div>
+        </div>
+        <div class="admin-section-header" style="margin-bottom:12px">
+          <div class="admin-section-title">Booking Terbaru</div>
+        </div>
+        <div class="table-overflow table-wrap">
+          <table>
+            <thead><tr><th>CODE</th><th>CUSTOMER</th><th>SERVICE</th><th>BARBER</th><th>TANGGAL</th><th>JAM</th><th>TOTAL</th><th>STATUS BOOKING</th><th>STATUS BAYAR</th></tr></thead>
+            <tbody id="dashBookings"><tr><td colspan="9" style="color:var(--muted)">Loading...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- BOOKINGS SECTION -->
+      <div id="sec-bookings" class="admin-section hidden">
+        <div class="admin-section-header">
+          <div class="admin-section-title">Semua Booking</div>
+          <div class="filter-row">
+            <input type="date" id="filterDate" class="form-input" placeholder="Filter tanggal">
+            <select id="filterStatus" class="form-select">
+              <option value="">Semua status</option>
+              <option value="pending">Pending</option>
+              <option value="confirmed">Confirmed</option>
+              <option value="completed">Completed</option>
+              <option value="cancelled">Cancelled</option>
+            </select>
+            <select id="filterBarber" class="form-select">
+              <option value="">Semua barber</option>
+            </select>
+            <button class="btn btn-gold btn-sm" onclick="loadAdminBookings()">FILTER</button>
+          </div>
+        </div>
+        <div class="table-overflow table-wrap">
+          <table>
+            <thead><tr><th>CODE</th><th>CUSTOMER</th><th>SERVICE</th><th>BARBER</th><th>TANGGAL</th><th>JAM</th><th>TOTAL</th><th>STATUS BOOKING</th><th>STATUS BAYAR</th><th></th></tr></thead>
+            <tbody id="bookingsTable"><tr><td colspan="10" style="color:var(--muted)">Loading...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SERVICES SECTION -->
+      <div id="sec-services" class="admin-section hidden">
+        <div class="admin-section-header">
+          <div class="admin-section-title">Services</div>
+          <button class="btn btn-gold btn-sm" onclick="openServiceModal()">+ ADD SERVICE</button>
+        </div>
+        <div class="table-overflow table-wrap">
+          <table>
+            <thead><tr><th>NAMA</th><th>HARGA</th><th>DURASI</th><th>STATUS</th><th></th></tr></thead>
+            <tbody id="servicesTable"><tr><td colspan="5" style="color:var(--muted)">Loading...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- BARBERS SECTION -->
+      <div id="sec-barbers" class="admin-section hidden">
+        <div class="admin-section-header">
+          <div class="admin-section-title">Barbers</div>
+          <button class="btn btn-gold btn-sm" onclick="openBarberModal()">+ ADD BARBER</button>
+        </div>
+        <div class="table-overflow table-wrap">
+          <table>
+            <thead><tr><th>NAMA</th><th>PHONE</th><th>SPESIALISASI</th><th>STATUS</th><th></th></tr></thead>
+            <tbody id="barbersTable"><tr><td colspan="5" style="color:var(--muted)">Loading...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- CUSTOMERS SECTION -->
+      <div id="sec-customers" class="admin-section hidden">
+        <div class="admin-section-header">
+          <div class="admin-section-title">Customers</div>
+        </div>
+        <div class="table-overflow table-wrap">
+          <table>
+            <thead><tr><th>NAMA</th><th>EMAIL</th><th>PHONE</th><th>TOTAL BOOKING</th><th>DAFTAR</th></tr></thead>
+            <tbody id="customersTable"><tr><td colspan="5" style="color:var(--muted)">Loading...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- PAYMENTS SECTION -->
+      <div id="sec-payments" class="admin-section hidden">
+        <div class="admin-section-header">
+          <div class="admin-section-title">Payments</div>
+        </div>
+        <div class="table-overflow table-wrap">
+          <table>
+            <thead><tr><th>BOOKING CODE</th><th>CUSTOMER</th><th>AMOUNT</th><th>METHOD</th><th>STATUS</th><th>TANGGAL</th></tr></thead>
+            <tbody id="paymentsTable"><tr><td colspan="6" style="color:var(--muted)">Loading...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- CALENDAR SECTION -->
+      <div id="sec-calendar" class="admin-section hidden">
+        <div class="admin-section-header">
+          <div class="admin-section-title">Kalender Booking</div>
+          <div style="display:flex;gap:8px">
+            <button class="btn btn-ghost btn-sm" id="calPrev" onclick="calShift(-1)">← Prev</button>
+            <span id="calMonthLabel" style="font-size:14px;font-weight:600;align-self:center;min-width:130px;text-align:center"></span>
+            <button class="btn btn-ghost btn-sm" id="calNext" onclick="calShift(1)">Next →</button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <div class="cal-wrap">
+            <div class="cal-grid" id="calGrid"></div>
+            <div class="cal-legend">
+              <div class="cal-legend-item"><div class="cal-legend-dot" style="background:rgba(34,197,94,.2)"></div>Confirmed</div>
+              <div class="cal-legend-item"><div class="cal-legend-dot" style="background:rgba(250,204,21,.15)"></div>Pending</div>
+              <div class="cal-legend-item"><div class="cal-legend-dot" style="background:rgba(239,68,68,.12)"></div>Cancelled</div>
+              <div class="cal-legend-item"><div class="cal-legend-dot" style="background:rgba(200,160,74,.15)"></div>Completed</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /admin-content -->
+  </main>
+</div><!-- /admin-layout -->
+
+<!-- SERVICE MODAL -->
+<div id="serviceModal" class="modal hidden">
+  <div class="modal-card">
+    <button class="modal-close" onclick="closeModal('serviceModal')">×</button>
+    <h2 class="modal-title" id="serviceModalTitle">Add Service</h2>
+    <form id="serviceForm">
+      <input type="hidden" id="svcId">
+      <div class="form-group"><label class="form-label">Nama Layanan</label><input id="svcName" class="form-input" required></div>
+      <div class="form-group"><label class="form-label">Deskripsi</label><textarea id="svcDesc" class="form-textarea" rows="2"></textarea></div>
+      <div class="form-group"><label class="form-label">Harga (Rp)</label><input id="svcPrice" type="number" class="form-input" required min="0"></div>
+      <div class="form-group"><label class="form-label">Durasi (menit)</label><input id="svcDuration" type="number" class="form-input" required min="1"></div>
+      <div class="form-group"><label class="form-label">Image URL</label><input id="svcImage" class="form-input"></div>
+      <div class="form-group"><label class="form-label">Status</label><select id="svcStatus" class="form-select"><option value="active">Active</option><option value="inactive">Inactive</option></select></div>
+      <button type="submit" class="btn btn-gold full">SIMPAN SERVICE</button>
+      <p id="svcMsg" class="form-message error"></p>
+    </form>
+  </div>
+</div>
+
+<!-- BARBER MODAL -->
+<div id="barberModal" class="modal hidden">
+  <div class="modal-card">
+    <button class="modal-close" onclick="closeModal('barberModal')">×</button>
+    <h2 class="modal-title" id="barberModalTitle">Add Barber</h2>
+    <form id="barberForm">
+      <input type="hidden" id="brbId">
+      <div class="form-group"><label class="form-label">Nama</label><input id="brbName" class="form-input" required></div>
+      <div class="form-group"><label class="form-label">Phone</label><input id="brbPhone" class="form-input"></div>
+      <div class="form-group"><label class="form-label">Spesialisasi</label><input id="brbSpec" class="form-input"></div>
+      <div class="form-group"><label class="form-label">Photo URL</label><input id="brbPhoto" class="form-input"></div>
+      <div class="form-group"><label class="form-label">Status</label><select id="brbStatus" class="form-select"><option value="active">Active</option><option value="inactive">Inactive</option></select></div>
+      <button type="submit" class="btn btn-gold full">SIMPAN BARBER</button>
+      <p id="brbMsg" class="form-message error"></p>
+    </form>
+  </div>
+</div>
+
+<!-- BOOKING DETAIL MODAL -->
+<div id="adminBookingModal" class="modal hidden">
+  <div class="modal-card" style="width:min(680px,100%)">
+    <button class="modal-close" onclick="closeModal('adminBookingModal')">×</button>
+    <div id="adminBookingDetail"></div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
