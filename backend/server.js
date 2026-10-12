@@ -104,6 +104,12 @@ async function seedDemo() {
 /* ── Boot ────────────────────────────────────────────── */
 (async () => {
   try {
+    console.log('[Boot] Starting EDPAbarber...');
+    console.log('[Boot] DB_HOST:', process.env.DB_HOST || '(not set)');
+    console.log('[Boot] DB_PORT:', process.env.DB_PORT || '(not set)');
+    console.log('[Boot] DB_USER:', process.env.DB_USER || '(not set)');
+    console.log('[Boot] DB_NAME:', process.env.DB_NAME || '(not set)');
+    console.log('[Boot] PORT:', process.env.PORT || '(not set)');
     await pool.query('SELECT 1');
     console.log('[DB] Connected to MySQL.');
     await seedDemo();
@@ -112,6 +118,7 @@ async function seedDemo() {
     });
   } catch (e) {
     console.error('[Fatal] Startup failed:', e.message);
+    console.error('[Fatal] Full error:', e.stack);
     process.exit(1);
   }
 })();
