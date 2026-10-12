@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — EDPAbarber</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<header class="site-header">
+  <div class="nav-inner">
+    <a class="brand" href="index.html"><span>EDPA</span><em>barber</em><span class="dot">.</span></a>
+    <button class="menu-toggle" onclick="document.querySelector('.nav').classList.toggle('open')">☰</button>
+    <ul class="nav">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="booking.html">Booking</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="btn btn-outline btn-sm" data-logout>LOGOUT</button>
+    </div>
+  </div>
+</header>
+
+<div class="dash-page">
+
+  <!-- Dashboard Hero -->
+  <div class="dash-hero">
+    <div class="dash-hero-inner">
+      <div>
+        <div class="dash-greeting">Customer Dashboard</div>
+        <h1 class="dash-name">Selamat datang, <em id="custName">—</em></h1>
+        <p class="dash-sub">Kelola booking dan riwayat kunjunganmu di sini.</p>
+      </div>
+      <a class="btn btn-gold" href="booking.html">+ BOOKING BARU</a>
+    </div>
+  </div>
+
+  <!-- Dashboard Body -->
+  <div class="dash-body">
+
+    <!-- Stats -->
+    <div id="custStats" class="stats-grid" style="margin-bottom:48px">
+      <div class="stat-card"><div class="stat-label">Total Booking</div><div class="stat-val stat-gold" id="st-total">—</div></div>
+      <div class="stat-card"><div class="stat-label">Upcoming</div><div class="stat-val stat-yellow" id="st-upcoming">—</div></div>
+      <div class="stat-card"><div class="stat-label">Completed</div><div class="stat-val stat-green" id="st-done">—</div></div>
+      <div class="stat-card"><div class="stat-label">Total Spend</div><div class="stat-val stat-gold" id="st-spend" style="font-size:22px">—</div></div>
+    </div>
+
+    <!-- Upcoming Bookings -->
+    <div class="section-title-sm">Upcoming Booking</div>
+    <div id="upcomingList" class="booking-list">
+      <div style="color:var(--muted);padding:20px 0;font-size:13px">Loading...</div>
+    </div>
+
+    <!-- Booking History -->
+    <div class="section-title-sm">Riwayat Booking</div>
+    <div id="historyList" class="booking-list">
+      <div style="color:var(--muted);padding:20px 0;font-size:13px">Loading...</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- BOOKING DETAIL MODAL -->
+<div id="bookingModal" class="modal hidden">
+  <div class="modal-card">
+    <button class="modal-close" onclick="closeModal('bookingModal')">×</button>
+    <div id="bookingModalContent"></div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EDPAbarber — Professional Barbershop &amp; Online Booking</title>
+  <meta name="description" content="Book your haircut, wash hair, and hair dye appointment online at EDPAbarber. Professional barber service with easy online booking and secure payment.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<header class="site-header">
+  <div class="nav-inner">
+    <a class="brand" href="index.html"><span>EDPA</span><em>barber</em><span class="dot">.</span></a>
+    <button class="menu-toggle" aria-label="Toggle menu" onclick="document.querySelector('.nav').classList.toggle('open')">☰</button>
+    <ul class="nav">
+      <li><a href="index.html" class="active">Home</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="barbers.html">Barbers</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#contact">Contact</a></li>
+      <li><a href="login.html">Login</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a class="btn btn-gold" href="booking.html">BOOK NOW ↗</a>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <!-- YouTube Video Background -->
+  <div class="hero-video-wrap">
+    <div id="ytPlayer"></div>
+  </div>
+  <div class="hero-overlay"></div>
+  <div class="hero-glow hero-glow-1"></div>
+  <div class="hero-glow hero-glow-2"></div>
+  <div class="hero-glow hero-glow-3"></div>
+  <div class="hero-content">
+    <div class="hero-label eyebrow-line">THE EDPA EXPERIENCE</div>
+    <h1>LOOK SHARP.<em>FEEL CONFIDENT.</em></h1>
+    <p class="hero-copy">Lebih dari sekadar potong rambut. Rasakan pengalaman grooming yang dibuat khusus untuk versi terbaik dirimu.</p>
+    <div class="hero-actions">
+      <a class="btn btn-gold btn-lg" href="booking.html">BOOK YOUR APPOINTMENT ↗</a>
+      <a class="btn btn-outline btn-lg" href="services.html">EXPLORE SERVICES →</a>
+    </div>
+  </div>
+  <div class="hero-footer">
+    <span>PRECISION IN EVERY DETAIL</span>
+    <span>SCROLL TO EXPLORE ↓</span>
+    <span>EST. 2026 — INDONESIA</span>
+  </div>
+</section>
+
+<!-- FEATURES STRIP -->
+<div class="features-strip">
+  <div class="features-grid container" style="max-width:100%;padding:0">
+    <div class="feat-item">
+      <span class="feat-num">01</span>
+      <div>
+        <div class="feat-title">Expert Barbers</div>
+        <div class="feat-desc">Tangan terampil, hasil maksimal.</div>
+      </div>
+    </div>
+    <div class="feat-item">
+      <span class="feat-num">02</span>
+      <div>
+        <div class="feat-title">Premium Experience</div>
+        <div class="feat-desc">Waktu untuk diri sendiri, tanpa kompromi.</div>
+      </div>
+    </div>
+    <div class="feat-item">
+      <span class="feat-num">03</span>
+      <div>
+        <div class="feat-title">Your Style, Your Way</div>
+        <div class="feat-desc">Setiap detail disesuaikan untukmu.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section class="section" id="services-section">
+  <div class="container">
+    <div class="section-header">
+      <div>
+        <div class="eyebrow" style="margin-bottom:14px">THE MENU</div>
+        <h2 class="section-title">Our <em>Services</em></h2>
+        <p class="section-subtitle">Layanan grooming premium untuk penampilan terbaikmu.</p>
+      </div>
+      <a class="view-link" href="services.html">VIEW ALL SERVICES ↗</a>
+    </div>
+    <div id="homeServiceGrid" class="services-grid">
+      <!-- loaded by script.js -->
+      <div class="service-card">
+        <div class="service-img" style="background-image:url('https://images.unsplash.com/photo-1622286342621-4bd786c2447c?auto=format&fit=crop&w=900&q=80')">
+          <div class="service-img-overlay"></div>
+          <span class="service-img-num">01 / 03</span>
+        </div>
+        <div class="service-body">
+          <div class="service-name">Haircut</div>
+          <p class="service-desc">Potong rambut presisi sesuai karakter dan gaya kamu.</p>
+          <div class="service-footer">
+            <div><div class="service-price">Rp50.000</div><div class="service-dur">30 menit</div></div>
+            <a class="btn btn-gold btn-sm" href="booking.html">BOOK NOW</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT / SPLIT -->
+<section id="about" style="padding:0">
+  <div class="split-section">
+
+    <!-- Panel kiri: Video YT background + foto fallback -->
+    <div class="split-photo" id="splitPhoto"
+         style="background-image:url('https://i.pinimg.com/736x/b8/f6/e3/b8f6e3e6e8334428b513a08883c245dd.jpg')">
+      <!-- YouTube video background -->
+      <div class="split-video-wrap">
+        <div id="splitYtPlayer"></div>
+      </div>
+      <!-- Overlay gelap tipis agar foto/video tidak terlalu terang -->
+      <div class="split-photo-overlay"></div>
+    </div>
+
+    <div class="split-content">
+      <div class="eyebrow-line">MORE THAN A HAIRCUT</div>
+      <h2 class="split-h2">A GOOD CUT.<em>A BETTER DAY.</em></h2>
+      <p class="split-body">Di EDPAbarber, setiap kunjungan adalah kesempatan untuk tampil lebih baik dan merasa lebih percaya diri. Kami percaya gaya yang tepat dimulai dari pengalaman yang personal.</p>
+      <a class="cta-link" href="booking.html">YOUR CHAIR IS WAITING ↗</a>
+    </div>
+  </div>
+</section>
+
+<!-- BARBERS -->
+<section class="section">
+  <div class="container">
+    <div class="section-header">
+      <div>
+        <div class="eyebrow" style="margin-bottom:14px">THE PEOPLE BEHIND THE CUT</div>
+        <h2 class="section-title">Meet your <em>barbers.</em></h2>
+      </div>
+      <div style="text-align:right;max-width:300px">
+        <p style="color:var(--muted);font-size:13px;margin-bottom:14px">Tiga pilihan barber, satu standar: detail yang selalu diperhatikan.</p>
+        <a class="btn btn-gold" href="barbers.html">PILIH BARBER ↗</a>
+      </div>
+    </div>
+    <div id="homeBarbersGrid" class="barbers-grid">
+      <!-- loaded by script.js -->
+    </div>
+  </div>
+</section>
+
+<!-- CTA BANNER -->
+<div class="cta-banner">
+  <div class="eyebrow-line">TIME FOR A FRESH START</div>
+  <h2 class="cta-banner-h2">YOUR NEXT LOOK <em>STARTS HERE.</em></h2>
+  <a class="btn btn-gold btn-lg" href="booking.html">BOOK YOUR APPOINTMENT ↗</a>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer" id="contact">
+  <div class="footer-top">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <div class="footer-logo"><span>EDPA</span>barber<span>.</span></div>
+          <p class="footer-tagline">Look sharp. Feel confident.<br>Your next great look starts here.</p>
+        </div>
+        <div>
+          <div class="footer-col-title">Explore</div>
+          <ul class="footer-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="services.html">Services</a></li>
+            <li><a href="barbers.html">Barbers</a></li>
+            <li><a href="booking.html">Book an appointment</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="footer-col-title">Account</div>
+          <ul class="footer-links">
+            <li><a href="login.html">Login</a></li>
+            <li><a href="customer-dashboard.html">Customer dashboard</a></li>
+            <li><a href="admin-dashboard.html">Admin panel</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="footer-col-title">Find Us</div>
+          <div class="footer-info">
+            Indonesia<br>
+            Buka setiap hari<br>
+            09:00 – 21:00 WIB<br><br>
+            WhatsApp: +62 895-4154-18661<br>
+            Instagram: @edpabarber
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    <div class="footer-bottom">
+      <span class="footer-copy">© 2026 EDPAbarber. All rights reserved.</span>
+      <span class="footer-craft">CRAFTED FOR CONFIDENCE</span>
+    </div>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+
+<!-- YouTube Background Video API -->
+<script>
+  // Load YouTube IFrame API
+  var tag = document.createElement('script');
+  tag.src = 'https://www.youtube.com/iframe_api';
+  var firstScript = document.getElementsByTagName('script')[0];
+  firstScript.parentNode.insertBefore(tag, firstScript);
+
+  var ytPlayer;
+  var splitPlayer;
+
+  function onYouTubeIframeAPIReady() {
+    // ── Hero background video ──────────────────────────
+    ytPlayer = new YT.Player('ytPlayer', {
+      videoId: 'HLQvTVtCWqg',
+      playerVars: {
+        autoplay:       1,
+        mute:           1,
+        loop:           1,
+        playlist:       'HLQvTVtCWqg',
+        controls:       0,
+        showinfo:       0,
+        rel:            0,
+        iv_load_policy: 3,
+        modestbranding: 1,
+        playsinline:    1,
+        disablekb:      1,
+        fs:             0,
+        vq:             'hd720'
+      },
+      events: {
+        onReady: function(e) {
+          e.target.mute();
+          e.target.playVideo();
+          try { e.target.setPlaybackQuality('hd720'); } catch(err) {}
+        },
+        onStateChange: function(e) {
+          if (e.data === YT.PlayerState.PLAYING) e.target.mute();
+        }
+      }
+    });
+
+    // ── Split section (About) background video ─────────
+    splitPlayer = new YT.Player('splitYtPlayer', {
+      videoId: 'HLQvTVtCWqg',
+      playerVars: {
+        autoplay:       1,
+        mute:           1,
+        loop:           1,
+        playlist:       'HLQvTVtCWqg',
+        controls:       0,
+        showinfo:       0,
+        rel:            0,
+        iv_load_policy: 3,
+        modestbranding: 1,
+        playsinline:    1,
+        disablekb:      1,
+        fs:             0,
+        vq:             'hd720',
+        start:          5   // mulai dari detik ke-5 agar beda dengan hero
+      },
+      events: {
+        onReady: function(e) {
+          e.target.mute();
+          e.target.playVideo();
+          try { e.target.setPlaybackQuality('hd720'); } catch(err) {}
+        },
+        onStateChange: function(e) {
+          if (e.data === YT.PlayerState.PLAYING) e.target.mute();
+        }
+      }
+    });
+  }
+</script>
+
+</body>
+</html>

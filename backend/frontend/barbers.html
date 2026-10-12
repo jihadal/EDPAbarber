@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Barbers — EDPAbarber</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="nav-inner">
+    <a class="brand" href="index.html"><span>EDPA</span><em>barber</em><span class="dot">.</span></a>
+    <button class="menu-toggle" onclick="document.querySelector('.nav').classList.toggle('open')">☰</button>
+    <ul class="nav">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="barbers.html" class="active">Barbers</a></li>
+      <li><a href="login.html">Login</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a class="btn btn-gold" href="booking.html">BOOK NOW ↗</a>
+    </div>
+  </div>
+</header>
+
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="eyebrow-line">THE PEOPLE BEHIND THE CUT</div>
+    <h1 class="page-h1">Meet your <em>barbers.</em></h1>
+    <p class="page-desc">Tiga pilihan barber, satu standar: detail yang selalu diperhatikan.</p>
+  </div>
+</div>
+
+<div class="page-body">
+  <div id="allBarbersGrid" class="barbers-grid">
+    <div style="color:var(--muted);font-size:13px">Loading barbers...</div>
+  </div>
+</div>
+
+<div class="cta-banner">
+  <div class="eyebrow-line">TIME FOR A FRESH START</div>
+  <h2 class="cta-banner-h2">YOUR NEXT LOOK <em>STARTS HERE.</em></h2>
+  <a class="btn btn-gold btn-lg" href="booking.html">BOOK YOUR APPOINTMENT ↗</a>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom">
+      <span class="footer-copy">© 2026 EDPAbarber. All rights reserved.</span>
+      <span class="footer-craft">CRAFTED FOR CONFIDENCE</span>
+    </div>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>

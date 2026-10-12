@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book Appointment — EDPAbarber</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<header class="site-header">
+  <div class="nav-inner">
+    <a class="brand" href="index.html"><span>EDPA</span><em>barber</em><span class="dot">.</span></a>
+    <button class="menu-toggle" onclick="document.querySelector('.nav').classList.toggle('open')">☰</button>
+    <ul class="nav">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="barbers.html">Barbers</a></li>
+      <li><a href="booking.html" class="active">Booking</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a class="btn btn-outline btn-sm" href="customer-dashboard.html">DASHBOARD</a>
+    </div>
+  </div>
+</header>
+
+<div class="booking-page">
+
+  <!-- Hero -->
+  <div class="booking-hero">
+    <div class="eyebrow-line">RESERVASI ONLINE</div>
+    <h1 class="booking-h1">Book Your <em>Appointment.</em></h1>
+    <p class="booking-sub">Beberapa langkah sederhana menuju gaya terbaikmu.</p>
+  </div>
+
+  <!-- Progress Bar -->
+  <div class="progress-bar">
+    <div class="progress-steps">
+      <div class="p-step active" id="ps-1"><span class="p-step-num">01</span> Layanan<span class="p-step-line"></span></div>
+      <div class="p-step" id="ps-2"><span class="p-step-num">02</span> Barber<span class="p-step-line"></span></div>
+      <div class="p-step" id="ps-3"><span class="p-step-num">03</span> Tanggal<span class="p-step-line"></span></div>
+      <div class="p-step" id="ps-4"><span class="p-step-num">04</span> Jam<span class="p-step-line"></span></div>
+      <div class="p-step" id="ps-5"><span class="p-step-num">05</span> Catatan<span class="p-step-line"></span></div>
+      <div class="p-step" id="ps-6"><span class="p-step-num">06</span> Ringkasan<span class="p-step-line"></span></div>
+      <div class="p-step" id="ps-7"><span class="p-step-num">07</span> Pembayaran<span class="p-step-line"></span></div>
+    </div>
+  </div>
+
+  <!-- Step Content -->
+  <div class="booking-wrap">
+
+    <!-- STEP 1: LAYANAN -->
+    <div class="step-panel active" id="step-1">
+      <div class="step-meta">
+        <span class="step-counter">STEP 01 / 06</span>
+        <span class="step-name">LAYANAN</span>
+      </div>
+      <h2 class="step-h2">Pilih <em>Layanan.</em></h2>
+      <p class="step-desc">Mulai dengan layanan yang kamu inginkan.</p>
+      <div id="serviceOptions" class="options-grid">
+        <div style="color:var(--muted);font-size:13px">Loading services...</div>
+      </div>
+      <div class="step-nav">
+        <button class="btn btn-gold" id="nextBtn1" onclick="bookingNext()">LANJUT →</button>
+      </div>
+      <p id="msg-1" class="form-message error"></p>
+    </div>
+
+    <!-- STEP 2: BARBER -->
+    <div class="step-panel" id="step-2">
+      <div class="step-meta">
+        <span class="step-counter">STEP 02 / 06</span>
+        <span class="step-name">BARBER</span>
+      </div>
+      <h2 class="step-h2">Pilih <em>Barber.</em></h2>
+      <p class="step-desc">Siapa yang akan menangani gaya barumu?</p>
+      <div id="barberOptions" class="barber-options">
+        <div style="color:var(--muted);font-size:13px">Loading barbers...</div>
+      </div>
+      <div class="step-nav has-back">
+        <button class="btn btn-outline" onclick="bookingBack()">← KEMBALI</button>
+        <button class="btn btn-gold" onclick="bookingNext()">LANJUT →</button>
+      </div>
+      <p id="msg-2" class="form-message error"></p>
+    </div>
+
+    <!-- STEP 3: TANGGAL -->
+    <div class="step-panel" id="step-3">
+      <div class="step-meta">
+        <span class="step-counter">STEP 03 / 06</span>
+        <span class="step-name">TANGGAL</span>
+      </div>
+      <h2 class="step-h2">Pilih <em>Tanggal.</em></h2>
+      <p class="step-desc">Pilih tanggal yang paling nyaman untukmu.</p>
+      <div style="max-width:400px">
+        <div class="form-group">
+          <label class="form-label">Tanggal kunjungan</label>
+          <input id="bookingDate" type="date" class="form-input form-input large" oninput="onDateChange(this.value)">
+        </div>
+        <p style="font-size:12px;color:var(--muted)">Jam operasional: 09:00 – 21:00, setiap hari.</p>
+      </div>
+      <div class="step-nav has-back">
+        <button class="btn btn-outline" onclick="bookingBack()">← KEMBALI</button>
+        <button class="btn btn-gold" onclick="bookingNext()">LANJUT →</button>
+      </div>
+      <p id="msg-3" class="form-message error"></p>
+    </div>
+
+    <!-- STEP 4: JAM -->
+    <div class="step-panel" id="step-4">
+      <div class="step-meta">
+        <span class="step-counter">STEP 04 / 06</span>
+        <span class="step-name">JAM</span>
+      </div>
+      <h2 class="step-h2">Pilih <em>Jam.</em></h2>
+      <p class="step-desc" id="step4Sub">Pilih waktu yang cocok untuk tanggal yang dipilih.</p>
+      <div id="timeGrid" class="time-grid"></div>
+      <p class="time-note">Slot yang dicoret sudah dipesan oleh barber yang kamu pilih.</p>
+      <div class="step-nav has-back">
+        <button class="btn btn-outline" onclick="bookingBack()">← KEMBALI</button>
+        <button class="btn btn-gold" onclick="bookingNext()">LANJUT →</button>
+      </div>
+      <p id="msg-4" class="form-message error"></p>
+    </div>
+
+    <!-- STEP 5: CATATAN -->
+    <div class="step-panel" id="step-5">
+      <div class="step-meta">
+        <span class="step-counter">STEP 05 / 06</span>
+        <span class="step-name">CATATAN</span>
+      </div>
+      <h2 class="step-h2">Ada <em>Catatan?</em></h2>
+      <p class="step-desc">Ceritakan gaya yang kamu inginkan, atau lewati langkah ini.</p>
+      <div class="form-group">
+        <label class="form-label">Catatan untuk barber (opsional)</label>
+        <textarea id="bookingNotes" class="form-textarea" rows="5" placeholder="Contoh: ingin potongan rapi yang mudah di-styling..." oninput="bk.notes=this.value"></textarea>
+      </div>
+      <div class="step-nav has-back">
+        <button class="btn btn-outline" onclick="bookingBack()">← KEMBALI</button>
+        <button class="btn btn-gold" onclick="bookingNext()">LANJUT →</button>
+      </div>
+    </div>
+
+    <!-- STEP 6: RINGKASAN -->
+    <div class="step-panel" id="step-6">
+      <div class="step-meta">
+        <span class="step-counter">STEP 06 / 07</span>
+        <span class="step-name">RINGKASAN</span>
+      </div>
+      <h2 class="step-h2">One last <em>look.</em></h2>
+      <p class="step-desc">Pastikan semuanya sudah sesuai sebelum memilih pembayaran.</p>
+      <div class="summary-card">
+        <div class="summary-row"><span class="sum-key">LAYANAN</span><span class="sum-val" id="sum-service">—</span></div>
+        <div class="summary-row"><span class="sum-key">BARBER</span><span class="sum-val" id="sum-barber">—</span></div>
+        <div class="summary-row"><span class="sum-key">TANGGAL &amp; JAM</span><span class="sum-val" id="sum-datetime">—</span></div>
+        <div class="summary-row"><span class="sum-key">CATATAN</span><span class="sum-val" id="sum-notes" style="color:var(--muted)">Tidak ada</span></div>
+        <div class="summary-row"><span class="sum-key">TOTAL</span><span class="sum-total" id="sum-price">—</span></div>
+      </div>
+      <div class="step-nav has-back">
+        <button class="btn btn-outline" onclick="bookingBack()">← KEMBALI</button>
+        <button class="btn btn-gold btn-lg" onclick="bookingNext()">PILIH METODE PEMBAYARAN →</button>
+      </div>
+      <p id="msg-6" class="form-message error"></p>
+    </div>
+
+    <!-- STEP 7: PEMBAYARAN -->
+    <div class="step-panel" id="step-7">
+      <div class="step-meta">
+        <span class="step-counter">STEP 07 / 07</span>
+        <span class="step-name">PEMBAYARAN</span>
+      </div>
+      <h2 class="step-h2">Pilih <em>Pembayaran.</em></h2>
+      <p class="step-desc">Pilih metode pembayaran yang kamu inginkan.</p>
+
+      <!-- Payment method cards -->
+      <div class="options-grid" style="margin-bottom:28px">
+
+        <!-- QRIS -->
+        <div class="option-card" id="pay-qris" onclick="selectPayment('qris')">
+          <div class="opt-radio"><div class="opt-radio-dot"></div></div>
+          <div class="opt-body">
+            <div class="opt-name" style="display:flex;align-items:center;gap:10px">
+              <span style="font-size:22px">⬛</span> QRIS
+            </div>
+            <div class="opt-desc">Bayar via QRIS — scan QR code dengan aplikasi e-wallet atau mobile banking apapun.</div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+              <span style="font-size:10px;padding:3px 8px;border:1px solid var(--border);border-radius:4px;color:var(--muted)">GoPay</span>
+              <span style="font-size:10px;padding:3px 8px;border:1px solid var(--border);border-radius:4px;color:var(--muted)">OVO</span>
+              <span style="font-size:10px;padding:3px 8px;border:1px solid var(--border);border-radius:4px;color:var(--muted)">Dana</span>
+              <span style="font-size:10px;padding:3px 8px;border:1px solid var(--border);border-radius:4px;color:var(--muted)">ShopeePay</span>
+              <span style="font-size:10px;padding:3px 8px;border:1px solid var(--border);border-radius:4px;color:var(--muted)">+ semua bank</span>
+            </div>
+          </div>
+          <div class="opt-right">
+            <div style="font-size:11px;color:var(--gold);font-weight:700;letter-spacing:1px">ONLINE</div>
+          </div>
+        </div>
+
+        <!-- TUNAI -->
+        <div class="option-card" id="pay-cash" onclick="selectPayment('cash')">
+          <div class="opt-radio"><div class="opt-radio-dot"></div></div>
+          <div class="opt-body">
+            <div class="opt-name" style="display:flex;align-items:center;gap:10px">
+              <span style="font-size:22px">💵</span> Tunai
+            </div>
+            <div class="opt-desc">Bayar langsung di barbershop saat kamu datang. Siapkan uang pas untuk kemudahan transaksi.</div>
+            <div style="margin-top:10px;font-size:11px;color:var(--muted)">Pembayaran dilakukan di kasir EDPAbarber.</div>
+          </div>
+          <div class="opt-right">
+            <div style="font-size:11px;color:var(--muted2);font-weight:700;letter-spacing:1px">OFFLINE</div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- QRIS panel (tampil jika pilih QRIS) -->
+      <div id="qrisPanel" class="hidden">
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:32px;text-align:center;max-width:440px;margin:0 auto 24px">
+          <div class="eyebrow" style="margin-bottom:14px">SCAN UNTUK MEMBAYAR</div>
+          <!-- QR placeholder — ganti dengan QR Midtrans saat integrasi real -->
+          <div style="width:180px;height:180px;background:white;border-radius:8px;margin:0 auto 16px;display:grid;grid-template-columns:repeat(9,1fr);gap:2px;padding:14px" id="qrDisplay"></div>
+          <div style="font-size:22px;font-weight:800;color:var(--gold)" id="qrAmount">—</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:4px">Total yang harus dibayar</div>
+          <div style="margin-top:20px;padding:14px;background:var(--card2);border-radius:var(--radius)">
+            <div style="font-size:11px;color:var(--muted);margin-bottom:6px;letter-spacing:1px;text-transform:uppercase">Merchant</div>
+            <div style="font-size:15px;font-weight:700">EDPAbarber</div>
+            <div style="font-size:12px;color:var(--muted)">Indonesia</div>
+          </div>
+          <p style="font-size:11px;color:var(--muted);margin-top:16px;line-height:1.7">Buka aplikasi e-wallet atau m-banking kamu, pilih Scan QR / QRIS, lalu scan kode di atas.</p>
+        </div>
+      </div>
+
+      <!-- Tunai panel (tampil jika pilih Tunai) -->
+      <div id="cashPanel" class="hidden">
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:32px;max-width:440px;margin:0 auto 24px">
+          <div class="eyebrow" style="margin-bottom:14px">INSTRUKSI PEMBAYARAN TUNAI</div>
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <div style="display:flex;gap:14px;align-items:flex-start">
+              <div style="width:28px;height:28px;border-radius:50%;background:var(--gold);color:#0B0B0B;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0">1</div>
+              <div><div style="font-weight:700;margin-bottom:2px">Datang ke EDPAbarber</div><div style="font-size:12px;color:var(--muted)">Tiba sebelum waktu booking kamu.</div></div>
+            </div>
+            <div style="display:flex;gap:14px;align-items:flex-start">
+              <div style="width:28px;height:28px;border-radius:50%;background:var(--gold);color:#0B0B0B;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0">2</div>
+              <div><div style="font-weight:700;margin-bottom:2px">Tunjukkan Booking ID</div><div style="font-size:12px;color:var(--muted)">Tunjukkan kode booking ke kasir kami.</div></div>
+            </div>
+            <div style="display:flex;gap:14px;align-items:flex-start">
+              <div style="width:28px;height:28px;border-radius:50%;background:var(--gold);color:#0B0B0B;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0">3</div>
+              <div><div style="font-weight:700;margin-bottom:2px">Bayar di Kasir</div><div style="font-size:12px;color:var(--muted)">Siapkan uang pas sebesar <strong id="cashAmount" style="color:var(--gold)">—</strong></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-nav has-back">
+        <button class="btn btn-outline" onclick="bookingBack()">← KEMBALI</button>
+        <button class="btn btn-gold btn-lg" id="confirmBtn" onclick="submitBooking()" disabled
+                style="opacity:.4;cursor:not-allowed">
+          KONFIRMASI BOOKING →
+        </button>
+      </div>
+      <p id="msg-7" class="form-message error"></p>
+    </div>
+
+  </div><!-- /booking-wrap -->
+</div><!-- /booking-page -->
+
+<script src="script.js"></script>
+</body>
+</html>
