@@ -665,10 +665,90 @@ function initPreview() {
         📱 KONFIRMASI WHATSAPP
       </a>
     </div>
-    <div style="margin-top:12px">
+    <div style="margin-top:12px;display:flex;flex-direction:column;gap:8px">
+      <button class="btn btn-outline full" onclick="printStruk()" style="width:100%">🖨️ CETAK STRUK</button>
       <a class="btn btn-ghost full" href="booking.html">BOOKING LAGI</a>
     </div>`;
 }
+
+/* =====================================================
+   PRINT STRUK
+   ===================================================== */
+window.printStruk = function() {
+  const booking = (() => {
+    try { return JSON.parse(sessionStorage.getItem('edpa_preview')); } catch { return null; }
+  })();
+  if (!booking) { alert('Data booking tidak ditemukan.'); return; }
+
+  const payMethod = booking.payment_method || 'cash';
+  const payLabel  = payMethod === 'qris' ? 'QRIS' : 'Tunai';
+  const code      = booking.booking_code || '—';
+
+  const win = window.open('', '_blank', 'width=420,height=620');
+  win.document.write(`<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Struk Booking — EDPAbarber</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family: 'Courier New', monospace; background:#fff; color:#111; padding:24px; width:380px; }
+    .logo { text-align:center; font-size:22px; font-weight:900; letter-spacing:2px; margin-bottom:2px; }
+    .logo em { font-style:normal; color:#B8962E; }
+    .tagline { text-align:center; font-size:10px; color:#666; letter-spacing:3px; text-transform:uppercase; margin-bottom:16px; }
+    .divider { border:none; border-top:1px dashed #bbb; margin:12px 0; }
+    .title { text-align:center; font-size:11px; letter-spacing:3px; text-transform:uppercase; margin-bottom:12px; font-weight:700; }
+    .row { display:flex; justify-content:space-between; font-size:12px; margin-bottom:6px; }
+    .row .lbl { color:#555; font-size:10px; letter-spacing:1px; text-transform:uppercase; }
+    .row .val { font-weight:700; text-align:right; max-width:55%; }
+    .code-box { text-align:center; font-size:26px; font-weight:900; letter-spacing:4px; color:#B8962E; margin:14px 0 4px; }
+    .total-row { display:flex; justify-content:space-between; font-size:14px; font-weight:900; margin-top:10px; border-top:2px solid #111; padding-top:10px; }
+    .total-row .val { color:#B8962E; }
+    .footer { text-align:center; font-size:10px; color:#888; margin-top:18px; line-height:1.8; }
+    .status-badge { display:inline-block; padding:2px 10px; border:1px solid #B8962E; border-radius:4px; font-size:10px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:#B8962E; }
+    @media print {
+      body { padding:8px; }
+      .no-print { display:none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="logo"><span>EDPA</span><em>barber</em></div>
+  <div class="tagline">Barbershop & Style</div>
+  <hr class="divider">
+  <div class="title">Struk Booking</div>
+
+  <div class="code-box">${esc(code)}</div>
+  <p style="text-align:center;font-size:10px;color:#888;margin-bottom:12px">Booking ID</p>
+
+  <hr class="divider">
+
+  <div class="row"><span class="lbl">Layanan</span><span class="val">${esc(booking.service_name || '—')}</span></div>
+  <div class="row"><span class="lbl">Barber</span><span class="val">${esc(booking.barber_name || '—')}</span></div>
+  <div class="row"><span class="lbl">Tanggal</span><span class="val">${dateID(booking.booking_date)}</span></div>
+  <div class="row"><span class="lbl">Jam</span><span class="val">${(booking.booking_time || '').slice(0,5)} WIB</span></div>
+  <div class="row"><span class="lbl">Durasi</span><span class="val">${booking.duration || '—'} menit</span></div>
+  <div class="row"><span class="lbl">Metode Bayar</span><span class="val">${esc(payLabel)}</span></div>
+  <div class="row"><span class="lbl">Status</span><span class="val"><span class="status-badge">${esc(booking.status || '—')}</span></span></div>
+  ${booking.notes ? `<div class="row"><span class="lbl">Catatan</span><span class="val">${esc(booking.notes)}</span></div>` : ''}
+
+  <div class="total-row">
+    <span>TOTAL</span>
+    <span class="val">${money(booking.total_price)}</span>
+  </div>
+
+  <hr class="divider">
+  <div class="footer">
+    Terima kasih telah memilih EDPAbarber.<br>
+    Tunjukkan kode booking ini saat datang.<br>
+    Dicetak: ${new Date().toLocaleString('id-ID', {day:'2-digit',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'})}
+  </div>
+
+  <script>window.onload = function(){ window.print(); }<\/script>
+</body>
+</html>`);
+  win.document.close();
+};
 
 /* =====================================================
    CUSTOMER DASHBOARD
