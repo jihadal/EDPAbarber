@@ -217,18 +217,27 @@
 
       <!-- QRIS panel (tampil jika pilih QRIS) -->
       <div id="qrisPanel" class="hidden">
-        <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:32px;text-align:center;max-width:440px;margin:0 auto 24px">
-          <div class="eyebrow" style="margin-bottom:14px">SCAN UNTUK MEMBAYAR</div>
-          <!-- QR placeholder — ganti dengan QR Midtrans saat integrasi real -->
-          <div style="width:180px;height:180px;background:white;border-radius:8px;margin:0 auto 16px;display:grid;grid-template-columns:repeat(9,1fr);gap:2px;padding:14px" id="qrDisplay"></div>
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:28px;text-align:center;max-width:440px;margin:0 auto 24px">
+          <div class="eyebrow" style="margin-bottom:16px">SCAN UNTUK MEMBAYAR</div>
+
+          <!-- Gambar QRIS asli -->
+          <div style="background:#fff;border-radius:12px;padding:12px;display:inline-block;margin-bottom:16px">
+            <img src="qris.png" alt="QRIS EDPAbarber"
+                 style="width:240px;height:240px;object-fit:contain;display:block">
+          </div>
+
           <div style="font-size:22px;font-weight:800;color:var(--gold)" id="qrAmount">—</div>
           <div style="font-size:12px;color:var(--muted);margin-top:4px">Total yang harus dibayar</div>
+
           <div style="margin-top:20px;padding:14px;background:var(--card2);border-radius:var(--radius)">
-            <div style="font-size:11px;color:var(--muted);margin-bottom:6px;letter-spacing:1px;text-transform:uppercase">Merchant</div>
-            <div style="font-size:15px;font-weight:700">EDPAbarber</div>
-            <div style="font-size:12px;color:var(--muted)">Indonesia</div>
+            <div style="font-size:11px;color:var(--muted);margin-bottom:4px;letter-spacing:1px;text-transform:uppercase">Merchant</div>
+            <div style="font-size:15px;font-weight:700">edpa barber, Service</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:2px">NMID : ID1026520242003</div>
           </div>
-          <p style="font-size:11px;color:var(--muted);margin-top:16px;line-height:1.7">Buka aplikasi e-wallet atau m-banking kamu, pilih Scan QR / QRIS, lalu scan kode di atas.</p>
+
+          <p style="font-size:11px;color:var(--muted);margin-top:16px;line-height:1.7">
+            Buka aplikasi e-wallet atau m-banking kamu,<br>pilih <strong>Scan QR / QRIS</strong>, lalu scan kode di atas.
+          </p>
         </div>
       </div>
 
