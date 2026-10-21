@@ -14,9 +14,13 @@ const esc = v => String(v ?? '').replace(/[&<>"']/g,
 const money = n =>
   new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 })
     .format(Number(n || 0));
-const dateID = d =>
-  d ? new Date(d + 'T00:00:00').toLocaleDateString('id-ID',
-    { day: '2-digit', month: 'short', year: 'numeric' }) : '—';
+const dateID = d => {
+  if (!d) return '—';
+  // Ambil hanya bagian YYYY-MM-DD jika ada timestamp lengkap (ISO / datetime dari DB)
+  const dateOnly = String(d).slice(0, 10);
+  const dt = new Date(dateOnly + 'T00:00:00');
+  return isNaN(dt) ? String(d) : dt.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' });
+};
 const fmtDatetime = (date, time) =>
   date ? `${dateID(date)} · ${time || '—'}` : '—';
 
