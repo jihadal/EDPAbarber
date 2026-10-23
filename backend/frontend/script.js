@@ -1162,6 +1162,23 @@ async function loadAdminServices() {
   }
 }
 
+window.onServiceImageChange = function(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const base64 = e.target.result;
+    document.getElementById('svcImage').value = base64;
+    const preview = document.getElementById('svcImagePreview');
+    const wrap    = document.getElementById('svcImagePreviewWrap');
+    const label   = document.getElementById('svcImageLabel');
+    preview.src        = base64;
+    wrap.style.display = 'block';
+    label.textContent  = file.name;
+  };
+  reader.readAsDataURL(file);
+};
+
 window.openServiceModal = async function(id) {
   const titleEl = document.getElementById('serviceModalTitle');
   if (!titleEl) { console.warn('serviceModal not found in DOM'); return; }
@@ -1176,9 +1193,24 @@ window.openServiceModal = async function(id) {
       document.getElementById('svcDuration').value = s.duration;
       document.getElementById('svcImage').value    = s.image || '';
       document.getElementById('svcStatus').value   = s.status;
+      // Tampilkan preview gambar jika ada
+      const preview = document.getElementById('svcImagePreview');
+      const wrap    = document.getElementById('svcImagePreviewWrap');
+      const label   = document.getElementById('svcImageLabel');
+      if (s.image) {
+        preview.src        = s.image;
+        wrap.style.display = 'block';
+        label.textContent  = 'Gambar tersimpan — pilih file baru untuk mengganti';
+      } else {
+        wrap.style.display = 'none';
+        label.textContent  = 'Pilih gambar dari komputer...';
+      }
     } catch (e) { alert('Gagal load service: ' + e.message); return; }
   } else {
     document.getElementById('serviceForm').reset();
+    document.getElementById('svcImagePreviewWrap').style.display = 'none';
+    document.getElementById('svcImageLabel').textContent = 'Pilih gambar dari komputer...';
+    document.getElementById('svcImage').value = '';
   }
   openModal('serviceModal');
 };

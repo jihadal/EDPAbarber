@@ -181,7 +181,19 @@
       <div class="form-group"><label class="form-label">Deskripsi</label><textarea id="svcDesc" class="form-textarea" rows="2"></textarea></div>
       <div class="form-group"><label class="form-label">Harga (Rp)</label><input id="svcPrice" type="number" class="form-input" required min="0"></div>
       <div class="form-group"><label class="form-label">Durasi (menit)</label><input id="svcDuration" type="number" class="form-input" required min="1"></div>
-      <div class="form-group"><label class="form-label">Image URL</label><input id="svcImage" class="form-input"></div>
+      <div class="form-group">
+        <label class="form-label">Gambar Layanan</label>
+        <div id="svcImagePreviewWrap" style="display:none;margin-bottom:10px;text-align:center">
+          <img id="svcImagePreview" src="" alt="Preview"
+               style="width:120px;height:80px;border-radius:8px;object-fit:cover;border:2px solid var(--gold)">
+        </div>
+        <label style="display:flex;align-items:center;gap:10px;cursor:pointer;padding:10px 14px;border:1px dashed var(--border);border-radius:var(--radius);background:var(--card2)">
+          <span style="font-size:20px">🖼️</span>
+          <span style="font-size:13px;color:var(--muted2)" id="svcImageLabel">Pilih gambar dari komputer...</span>
+          <input type="file" id="svcImageFile" accept="image/*" style="display:none" onchange="onServiceImageChange(this)">
+        </label>
+        <input type="hidden" id="svcImage">
+      </div>
       <div class="form-group"><label class="form-label">Status</label><select id="svcStatus" class="form-select"><option value="active">Active</option><option value="inactive">Inactive</option></select></div>
       <button type="submit" class="btn btn-gold full">SIMPAN SERVICE</button>
       <p id="svcMsg" class="form-message error"></p>
