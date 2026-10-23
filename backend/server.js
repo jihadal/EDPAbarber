@@ -24,8 +24,8 @@ app.use('/api/payments/webhook', express.raw({ type: 'application/json' }), (req
   next();
 });
 
-app.use(express.json({ limit: '2mb' }));
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 /* ── Static frontend ─────────────────────────────────── */
 // When deployed with Root Directory = backend, frontend is at ../frontend (local)
@@ -70,7 +70,22 @@ app.use((err, _req, res, _next) => {
   });
 });
 
-/* ── Demo seed (creates demo accounts on first start) ── */
+/* ── Auto-migrate: pastikan kolom photo/image pakai LONGTEXT ── */
+async function runMigrations() {
+  const conn = await pool.getConnection();
+  try {
+    await conn.query(`ALTER TABLE barbers MODIFY COLUMN photo LONGTEXT`);
+    await conn.query(`ALTER TABLE services MODIFY COLUMN image LONGTEXT`);
+    console.log('[Migration] Columns photo/image set to LONGTEXT.');
+  } catch (e) {
+    // Abaikan jika sudah LONGTEXT atau tabel tidak ada kolom itu
+    console.warn('[Migration] Warning:', e.message);
+  } finally {
+    conn.release();
+  }
+}
+
+
 async function seedDemo() {
   const conn = await pool.getConnection();
   try {
@@ -122,6 +137,7 @@ async function seedDemo() {
     console.log('[Boot] PORT:', process.env.PORT || '(not set)');
     await pool.query('SELECT 1');
     console.log('[DB] Connected to MySQL.');
+    await runMigrations();
     await seedDemo();
     app.listen(PORT, () => {
       console.log(`[Server] EDPAbarber running at http://localhost:${PORT}`);
