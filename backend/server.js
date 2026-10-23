@@ -55,6 +55,10 @@ app.use('/api/dashboard', require('./routes/dashboard'));
 app.use('/api/payments',  require('./routes/payments'));
 
 /* ── SPA fallback ────────────────────────────────────── */
+app.get('/', (_req, res) => {
+  res.sendFile(path.join(frontendDir, 'splash.html'));
+});
+
 app.get('*', (_req, res) => {
   res.sendFile(path.join(frontendDir, 'index.html'));
 });
