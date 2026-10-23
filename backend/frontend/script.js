@@ -1569,7 +1569,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
   /* ── 4. Smooth page transitions ────────────────────── */
   function initPageTransitions() {
-    document.body.classList.add('page-loaded');
+    // Jangan tambahkan page-loaded jika splash screen masih aktif
+    var splash = document.getElementById('splash');
+    if (!splash) {
+      document.body.classList.add('page-loaded');
+    } else {
+      // Tambahkan page-loaded setelah splash selesai
+      var observer = new MutationObserver(function() {
+        if (!document.getElementById('splash')) {
+          document.body.classList.add('page-loaded');
+          observer.disconnect();
+        }
+      });
+      observer.observe(document.body, { childList: true });
+    }
     document.addEventListener('click', function(e) {
       var a = e.target.closest('a');
       if (!a) return;
