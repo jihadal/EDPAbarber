@@ -1238,6 +1238,23 @@ async function loadAdminBarbers() {
   }
 }
 
+window.onBarberPhotoChange = function(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const base64 = e.target.result;
+    document.getElementById('brbPhoto').value = base64;
+    const preview = document.getElementById('brbPhotoPreview');
+    const wrap    = document.getElementById('brbPhotoPreviewWrap');
+    const label   = document.getElementById('brbPhotoLabel');
+    preview.src = base64;
+    wrap.style.display = 'block';
+    label.textContent  = file.name;
+  };
+  reader.readAsDataURL(file);
+};
+
 window.openBarberModal = async function(id) {
   const titleEl = document.getElementById('barberModalTitle');
   if (!titleEl) { console.warn('barberModal not found in DOM'); return; }
@@ -1251,9 +1268,24 @@ window.openBarberModal = async function(id) {
       document.getElementById('brbSpec').value  = b.specialization || '';
       document.getElementById('brbPhoto').value = b.photo || '';
       document.getElementById('brbStatus').value= b.status;
+      // Tampilkan preview foto jika ada
+      const preview = document.getElementById('brbPhotoPreview');
+      const wrap    = document.getElementById('brbPhotoPreviewWrap');
+      const label   = document.getElementById('brbPhotoLabel');
+      if (b.photo) {
+        preview.src        = b.photo;
+        wrap.style.display = 'block';
+        label.textContent  = 'Foto tersimpan — pilih file baru untuk mengganti';
+      } else {
+        wrap.style.display = 'none';
+        label.textContent  = 'Pilih foto dari komputer...';
+      }
     } catch (e) { alert('Gagal load barber: ' + e.message); return; }
   } else {
     document.getElementById('barberForm').reset();
+    document.getElementById('brbPhotoPreviewWrap').style.display = 'none';
+    document.getElementById('brbPhotoLabel').textContent = 'Pilih foto dari komputer...';
+    document.getElementById('brbPhoto').value = '';
   }
   openModal('barberModal');
 };
