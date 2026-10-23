@@ -174,6 +174,26 @@
       <h2 class="step-h2">Pilih <em>Pembayaran.</em></h2>
       <p class="step-desc">Pilih metode pembayaran yang kamu inginkan.</p>
 
+      <!-- DP Notice -->
+      <div style="background:rgba(184,150,46,0.08);border:1px solid rgba(184,150,46,0.3);border-radius:var(--radius);padding:16px 20px;margin-bottom:24px;display:flex;gap:14px;align-items:flex-start">
+        <span style="font-size:22px;flex-shrink:0">💰</span>
+        <div>
+          <div style="font-size:13px;font-weight:700;color:var(--gold);margin-bottom:4px;letter-spacing:0.5px">WAJIB DP 50% DI MUKA</div>
+          <div style="font-size:12px;color:var(--muted2);line-height:1.7">
+            Booking ini memerlukan <strong style="color:var(--text)">Down Payment (DP) sebesar 50%</strong> dari total harga sebagai tanda jadi.<br>
+            Sisa pembayaran <strong style="color:var(--text)">50%</strong> dilunasi saat kamu datang ke barbershop.
+          </div>
+          <div style="margin-top:10px;display:flex;gap:16px;flex-wrap:wrap">
+            <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px">DP yang dibayar sekarang</div>
+            <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px">Sisa saat datang</div>
+          </div>
+          <div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:4px">
+            <div style="font-size:18px;font-weight:800;color:var(--gold)" id="dpAmount">—</div>
+            <div style="font-size:18px;font-weight:800;color:var(--muted2)" id="remainAmount">—</div>
+          </div>
+        </div>
+      </div>
+
       <!-- Payment method cards -->
       <div class="options-grid" style="margin-bottom:28px">
 
@@ -227,7 +247,7 @@
           </div>
 
           <div style="font-size:22px;font-weight:800;color:var(--gold)" id="qrAmount">—</div>
-          <div style="font-size:12px;color:var(--muted);margin-top:4px">Total yang harus dibayar</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:4px">DP 50% yang dibayar sekarang</div>
 
           <div style="margin-top:20px;padding:14px;background:var(--card2);border-radius:var(--radius)">
             <div style="font-size:11px;color:var(--muted);margin-bottom:4px;letter-spacing:1px;text-transform:uppercase">Merchant</div>
@@ -256,7 +276,7 @@
             </div>
             <div style="display:flex;gap:14px;align-items:flex-start">
               <div style="width:28px;height:28px;border-radius:50%;background:var(--gold);color:#0B0B0B;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0">3</div>
-              <div><div style="font-weight:700;margin-bottom:2px">Bayar di Kasir</div><div style="font-size:12px;color:var(--muted)">Siapkan uang pas sebesar <strong id="cashAmount" style="color:var(--gold)">—</strong></div></div>
+              <div><div style="font-weight:700;margin-bottom:2px">Bayar DP di Kasir</div><div style="font-size:12px;color:var(--muted)">Siapkan DP 50% sebesar <strong id="cashAmount" style="color:var(--gold)">—</strong>, sisa dilunasi setelah selesai.</div></div>
             </div>
           </div>
         </div>

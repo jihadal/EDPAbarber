@@ -500,11 +500,23 @@ function renderPaymentStep() {
   if (btn) { btn.disabled = true; btn.style.opacity = '.4'; btn.style.cursor = 'not-allowed'; }
 
   // Show price in panels
-  const price = bk.service?.rawPrice != null ? money(bk.service.rawPrice) : (bk.service?.price || '—');
+  const rawPrice = bk.service?.rawPrice != null ? bk.service.rawPrice : 0;
+  const dp       = Math.ceil(rawPrice / 2);
+  const remain   = rawPrice - dp;
+  const price    = rawPrice > 0 ? money(rawPrice) : (bk.service?.price || '—');
+  const dpFmt    = rawPrice > 0 ? money(dp) : '—';
+  const remFmt   = rawPrice > 0 ? money(remain) : '—';
+
   const qaEl  = document.getElementById('qrAmount');
   const caEl  = document.getElementById('cashAmount');
-  if (qaEl) qaEl.textContent = price;
+  const dpEl  = document.getElementById('dpAmount');
+  const remEl = document.getElementById('remainAmount');
+  const qaLbl = document.getElementById('qrAmountLabel');
+
+  if (qaEl) qaEl.textContent = dpFmt;
   if (caEl) caEl.textContent = price;
+  if (dpEl) dpEl.textContent = dpFmt;
+  if (remEl) remEl.textContent = remFmt;
 
   // Build QRIS art
   buildQRArt();
