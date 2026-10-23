@@ -8,86 +8,51 @@
   <meta name="description" content="Book your haircut, wash hair, and hair dye appointment online at EDPAbarber. Professional barber service with easy online booking and secure payment.">
   <link rel="stylesheet" href="style.css">
   <style>
-    /* ── SPLASH OVERLAY ── */
     #splash {
-      position: fixed;
-      inset: 0;
-      background: #0B0B0B;
-      z-index: 99999;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
+      position: fixed; inset: 0; background: #0B0B0B; z-index: 99999;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
       transition: opacity 0.6s ease;
     }
-    #splash.hide {
-      opacity: 0;
-      pointer-events: none;
-    }
+    #splash.hide { opacity: 0; pointer-events: none; }
     #splash .sp-bg {
-      position: absolute;
-      inset: 0;
+      position: absolute; inset: 0;
       background:
         radial-gradient(ellipse at 20% 50%, rgba(184,150,46,0.07) 0%, transparent 60%),
         radial-gradient(ellipse at 80% 20%, rgba(184,150,46,0.04) 0%, transparent 50%);
     }
     #splash .sp-wrap {
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      opacity: 0;
-      transform: translateY(14px);
+      position: relative; display: flex; flex-direction: column; align-items: center;
+      opacity: 0; transform: translateY(14px);
       animation: spFadeUp 0.7s ease forwards 0.2s;
     }
     #splash .sp-icon {
-      width: 68px;
-      height: 68px;
-      margin-bottom: 18px;
-      opacity: 0;
-      animation: spPop 0.6s cubic-bezier(0.34,1.56,0.64,1) forwards 0.4s;
+      width: 68px; height: 68px; margin-bottom: 18px;
+      opacity: 0; animation: spPop 0.6s cubic-bezier(0.34,1.56,0.64,1) forwards 0.4s;
     }
     #splash .sp-logo {
-      font-size: 30px;
-      font-weight: 900;
-      letter-spacing: 3px;
-      color: #fff;
-      line-height: 1;
-      margin-bottom: 5px;
-      font-family: 'Segoe UI', system-ui, sans-serif;
+      font-size: 30px; font-weight: 900; letter-spacing: 3px; color: #fff;
+      line-height: 1; margin-bottom: 5px; font-family: 'Segoe UI', system-ui, sans-serif;
     }
     #splash .sp-logo em { font-style: normal; color: #B8962E; }
     #splash .sp-tag {
-      font-size: 10px;
-      letter-spacing: 4px;
-      text-transform: uppercase;
-      color: #555;
-      margin-bottom: 28px;
-      font-family: 'Segoe UI', system-ui, sans-serif;
+      font-size: 10px; letter-spacing: 4px; text-transform: uppercase;
+      color: #555; margin-bottom: 28px; font-family: 'Segoe UI', system-ui, sans-serif;
     }
     #splash .sp-line {
-      width: 0;
-      height: 1px;
+      width: 0; height: 1px; margin-bottom: 28px;
       background: linear-gradient(90deg, transparent, #B8962E, transparent);
-      margin-bottom: 28px;
       animation: spLine 0.8s ease forwards 0.9s;
     }
     #splash .sp-dots { display: flex; gap: 8px; }
     #splash .sp-dot {
-      width: 6px; height: 6px; border-radius: 50%;
-      background: #B8962E; opacity: 0.3;
-      animation: spPulse 1.2s ease-in-out infinite;
+      width: 6px; height: 6px; border-radius: 50%; background: #B8962E;
+      opacity: 0.3; animation: spPulse 1.2s ease-in-out infinite;
     }
     #splash .sp-dot:nth-child(2) { animation-delay: 0.2s; }
     #splash .sp-dot:nth-child(3) { animation-delay: 0.4s; }
     #splash .sp-credit {
-      position: absolute;
-      bottom: 28px;
-      font-size: 10px;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: #333;
-      opacity: 0;
+      position: absolute; bottom: 28px; font-size: 10px; letter-spacing: 2px;
+      text-transform: uppercase; color: #333; opacity: 0;
       animation: spFadeIn 0.5s ease forwards 1.2s;
       font-family: 'Segoe UI', system-ui, sans-serif;
     }
@@ -103,15 +68,6 @@
     }
     @keyframes spFadeIn { to { opacity:1; } }
   </style>
-  <script>
-    // Hanya tampilkan splash sekali per session
-    if (sessionStorage.getItem('splashShown')) {
-      document.addEventListener('DOMContentLoaded', function() {
-        var s = document.getElementById('splash');
-        if (s) s.remove();
-      });
-    }
-  </script>
 </head>
 <body>
 
@@ -152,7 +108,8 @@
       }, 2800);
     } else {
       // Sudah pernah lihat splash — hapus langsung
-      document.getElementById('splash').remove();
+      var s2 = document.getElementById('splash');
+      if (s2 && s2.parentNode) s2.parentNode.removeChild(s2);
     }
   })();
 </script>

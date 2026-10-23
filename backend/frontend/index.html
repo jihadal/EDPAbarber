@@ -104,7 +104,8 @@
         if (s) { s.classList.add('hide'); setTimeout(function() { s.remove(); }, 650); }
       }, 2800);
     } else {
-      document.getElementById('splash').remove();
+      var s2 = document.getElementById('splash');
+      if (s2 && s2.parentNode) s2.parentNode.removeChild(s2);
     }
   })();
 </script>
