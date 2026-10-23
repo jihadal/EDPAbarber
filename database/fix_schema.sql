@@ -15,3 +15,12 @@ ALTER TABLE bookings DROP INDEX IF EXISTS uq_barber_slot;
 -- ALTER TABLE bookings MODIFY COLUMN booking_time TIME NOT NULL;
 
 SELECT 'Schema fix applied successfully.' AS result;
+
+-- =====================================================
+-- Fix: Ubah kolom photo/image ke LONGTEXT
+-- Jalankan ini jika muncul "Data too long for column"
+-- =====================================================
+ALTER TABLE barbers MODIFY COLUMN photo LONGTEXT;
+ALTER TABLE services MODIFY COLUMN image LONGTEXT;
+
+SELECT 'Photo/image columns updated to LONGTEXT.' AS result;

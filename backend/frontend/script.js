@@ -1162,12 +1162,28 @@ async function loadAdminServices() {
   }
 }
 
+function compressImage(file, maxWidth, maxHeight, quality, callback) {
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const img = new Image();
+    img.onload = function() {
+      let w = img.width, h = img.height;
+      if (w > maxWidth)  { h = Math.round(h * maxWidth / w);  w = maxWidth; }
+      if (h > maxHeight) { w = Math.round(w * maxHeight / h); h = maxHeight; }
+      const canvas = document.createElement('canvas');
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      callback(canvas.toDataURL('image/jpeg', quality));
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
 window.onServiceImageChange = function(input) {
   const file = input.files[0];
   if (!file) return;
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    const base64 = e.target.result;
+  compressImage(file, 800, 600, 0.7, function(base64) {
     document.getElementById('svcImage').value = base64;
     const preview = document.getElementById('svcImagePreview');
     const wrap    = document.getElementById('svcImagePreviewWrap');
@@ -1175,8 +1191,7 @@ window.onServiceImageChange = function(input) {
     preview.src        = base64;
     wrap.style.display = 'block';
     label.textContent  = file.name;
-  };
-  reader.readAsDataURL(file);
+  });
 };
 
 window.openServiceModal = async function(id) {
@@ -1273,18 +1288,15 @@ async function loadAdminBarbers() {
 window.onBarberPhotoChange = function(input) {
   const file = input.files[0];
   if (!file) return;
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    const base64 = e.target.result;
+  compressImage(file, 400, 400, 0.75, function(base64) {
     document.getElementById('brbPhoto').value = base64;
     const preview = document.getElementById('brbPhotoPreview');
     const wrap    = document.getElementById('brbPhotoPreviewWrap');
     const label   = document.getElementById('brbPhotoLabel');
-    preview.src = base64;
+    preview.src        = base64;
     wrap.style.display = 'block';
     label.textContent  = file.name;
-  };
-  reader.readAsDataURL(file);
+  });
 };
 
 window.openBarberModal = async function(id) {
