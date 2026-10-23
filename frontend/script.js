@@ -314,9 +314,8 @@ async function initBooking() {
     $('#serviceOptions').innerHTML = `<p class="form-message error">${esc(e.message)}</p>`;
   }
 
-  // Set minimum date = tomorrow
+  // Set minimum date = today (booking hari ini diizinkan)
   const minDate = new Date();
-  minDate.setDate(minDate.getDate() + 1);
   const dateInput = $('#bookingDate');
   if (dateInput) {
     dateInput.min = minDate.toISOString().slice(0, 10);
@@ -1497,3 +1496,129 @@ document.addEventListener('DOMContentLoaded', () => {
   if (page === 'customer-dashboard.html') initCustomerDash();
   if (page === 'admin-dashboard.html')   initAdmin();
 });
+
+/* =====================================================
+   ANIMATIONS — Modern EDPAbarber
+   ===================================================== */
+
+(function() {
+  'use strict';
+
+  /* ── 1. Scroll-reveal IntersectionObserver ─────────── */
+  function initReveal() {
+    const selectors = '.reveal, .reveal-left, .reveal-right';
+    const items = document.querySelectorAll(selectors);
+    if (!items.length) return;
+    const obs = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          obs.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+    items.forEach(function(el) { obs.observe(el); });
+  }
+
+  /* ── 2. Navbar scroll effect ───────────────────────── */
+  function initNavbarScroll() {
+    var header = document.querySelector('.site-header');
+    if (!header) return;
+    function onScroll() {
+      if (window.scrollY > 40) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  }
+
+  /* ── 3. Counter animation ──────────────────────────── */
+  function animateCount(el, target, duration) {
+    duration = duration || 1200;
+    var start = 0;
+    var startTime = null;
+    var isFloat = target % 1 !== 0;
+    function step(timestamp) {
+      if (!startTime) startTime = timestamp;
+      var progress = Math.min((timestamp - startTime) / duration, 1);
+      var ease = 1 - Math.pow(1 - progress, 3);
+      var current = start + (target - start) * ease;
+      el.textContent = isFloat ? current.toFixed(1) : Math.floor(current).toLocaleString('id-ID');
+      if (progress < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  function initCounters() {
+    var els = document.querySelectorAll('.stat-val[data-count]');
+    if (!els.length) return;
+    var obs2 = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          var el = entry.target;
+          var target = parseFloat(el.getAttribute('data-count'));
+          if (!isNaN(target)) animateCount(el, target);
+          obs2.unobserve(el);
+        }
+      });
+    }, { threshold: 0.5 });
+    els.forEach(function(el) { obs2.observe(el); });
+  }
+
+  /* ── 4. Smooth page transitions ────────────────────── */
+  function initPageTransitions() {
+    document.body.classList.add('page-loaded');
+    document.addEventListener('click', function(e) {
+      var a = e.target.closest('a');
+      if (!a) return;
+      var href = a.getAttribute('href');
+      if (!href || href.startsWith('#') || href.startsWith('javascript') ||
+          href.startsWith('http') || href.startsWith('//') ||
+          a.target === '_blank' || e.ctrlKey || e.metaKey || e.shiftKey) return;
+      // Only handle same-directory .html links
+      if (!/\.html/.test(href)) return;
+      e.preventDefault();
+      document.body.classList.add('page-leaving');
+      setTimeout(function() { window.location.href = href; }, 280);
+    });
+  }
+
+  /* ── 5. Skeleton helpers (exposed globally) ────────── */
+  /**
+   * Replace a container's innerHTML with N skeleton cards.
+   * Call before an API fetch; call clearSkeleton after.
+   */
+  window.showSkeleton = function(container, count, hasImg) {
+    count = count || 3;
+    var html = '';
+    for (var i = 0; i < count; i++) {
+      html += '<div class="skeleton-card">';
+      if (hasImg) html += '<div class="skeleton-img"></div>';
+      html += '<div class="skeleton-line w80"></div>';
+      html += '<div class="skeleton-line w60"></div>';
+      html += '<div class="skeleton-line w40"></div>';
+      html += '</div>';
+    }
+    if (container) container.innerHTML = html;
+  };
+  window.clearSkeleton = function(container) {
+    if (container) container.innerHTML = '';
+  };
+
+  /* ── Init ───────────────────────────────────────────── */
+  function init() {
+    initReveal();
+    initNavbarScroll();
+    initCounters();
+    initPageTransitions();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();

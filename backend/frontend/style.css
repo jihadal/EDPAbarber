@@ -1434,3 +1434,304 @@ body.has-nav > *:not(.site-header):first-of-type,
   .auth-form-side { padding: 40px 24px; }
   .split-content { padding: 40px 24px; }
 }
+
+/* =====================================================
+   ANIMATIONS — Modern EDPAbarber
+   ===================================================== */
+
+/* ── 1. Scroll-reveal ────────────────────────────────── */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+  will-change: transform;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.reveal-left {
+  opacity: 0;
+  transform: translateX(-40px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+  will-change: transform;
+}
+.reveal-left.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+.reveal-right {
+  opacity: 0;
+  transform: translateX(40px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+  will-change: transform;
+}
+.reveal-right.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+.delay-1 { transition-delay: 0.1s; }
+.delay-2 { transition-delay: 0.2s; }
+.delay-3 { transition-delay: 0.3s; }
+.delay-4 { transition-delay: 0.4s; }
+.delay-5 { transition-delay: 0.5s; }
+
+/* ── 2. Navbar scroll effect ─────────────────────────── */
+.site-header.scrolled {
+  background: rgba(11,11,11,0.97) !important;
+  border-bottom: 1px solid rgba(200,160,74,0.18) !important;
+  box-shadow: 0 2px 20px rgba(0,0,0,0.5);
+  backdrop-filter: blur(12px);
+}
+
+/* ── 3. Button hover animations ──────────────────────── */
+.btn-gold {
+  transition: all 0.25s ease, box-shadow 0.25s ease, transform 0.18s ease !important;
+}
+.btn-gold:hover {
+  box-shadow: 0 0 18px rgba(200,160,74,0.45), 0 4px 16px rgba(200,160,74,0.2) !important;
+  transform: translateY(-2px) scale(1.03) !important;
+}
+.btn-outline {
+  transition: all 0.25s ease, border-color 0.25s ease !important;
+}
+.btn-outline:hover {
+  border-color: var(--gold) !important;
+  color: var(--gold) !important;
+  transform: translateY(-2px) !important;
+}
+
+/* ── 4. Card hover animations ────────────────────────── */
+.stat-card,
+.option-card,
+.barber-photo-wrap,
+.service-img,
+.feat-item {
+  transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+  will-change: transform;
+}
+.stat-card:hover,
+.option-card:hover {
+  transform: translateY(-4px) !important;
+  box-shadow: 0 8px 28px rgba(200,160,74,0.12) !important;
+}
+.barber-photo-wrap:hover {
+  transform: translateY(-4px) scale(1.01) !important;
+  box-shadow: 0 8px 28px rgba(200,160,74,0.15) !important;
+}
+.service-img:hover {
+  transform: translateY(-4px) !important;
+  box-shadow: 0 8px 24px rgba(200,160,74,0.12) !important;
+}
+.feat-item:hover {
+  transform: translateY(-3px);
+  background: rgba(200,160,74,0.04);
+}
+
+/* ── 5. Hero particles ───────────────────────────────── */
+.hero-particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 1;
+}
+.hero-particles .p-dot {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--gold);
+  opacity: 0;
+  will-change: transform, opacity;
+}
+.hero-particles .p-dot:nth-child(1)  { top: 18%; left: 12%; animation: floatDot1 7s ease-in-out 0s   infinite; }
+.hero-particles .p-dot:nth-child(2)  { top: 65%; left: 7%;  animation: floatDot2 9s ease-in-out 1s   infinite; width:3px;height:3px; }
+.hero-particles .p-dot:nth-child(3)  { top: 30%; left: 85%; animation: floatDot3 8s ease-in-out 0.5s infinite; }
+.hero-particles .p-dot:nth-child(4)  { top: 75%; left: 78%; animation: floatDot1 6s ease-in-out 2s   infinite; width:3px;height:3px; }
+.hero-particles .p-dot:nth-child(5)  { top: 50%; left: 50%; animation: floatDot2 10s ease-in-out 1.5s infinite; width:4px;height:4px; opacity:0; }
+.hero-particles .p-dot:nth-child(6)  { top: 85%; left: 40%; animation: floatDot3 7.5s ease-in-out 3s  infinite; }
+.hero-particles .p-dot:nth-child(7)  { top: 12%; left: 60%; animation: floatDot1 8.5s ease-in-out 0.8s infinite; width:3px;height:3px; }
+.hero-particles .p-dot:nth-child(8)  { top: 42%; left: 22%; animation: floatDot2 9.5s ease-in-out 2.5s infinite; }
+
+@keyframes floatDot1 {
+  0%   { opacity:0;   transform: translateY(0)   scale(1); }
+  20%  { opacity:0.7; }
+  50%  { opacity:0.4; transform: translateY(-22px) scale(1.3); }
+  80%  { opacity:0.7; }
+  100% { opacity:0;   transform: translateY(0)   scale(1); }
+}
+@keyframes floatDot2 {
+  0%   { opacity:0;   transform: translateY(0)   translateX(0); }
+  25%  { opacity:0.5; transform: translateY(-14px) translateX(8px); }
+  50%  { opacity:0.8; transform: translateY(-28px) translateX(-4px); }
+  75%  { opacity:0.4; transform: translateY(-18px) translateX(12px); }
+  100% { opacity:0;   transform: translateY(0)   translateX(0); }
+}
+@keyframes floatDot3 {
+  0%,100% { opacity:0;   transform: scale(1); }
+  30%     { opacity:0.6; transform: scale(1.5) translateY(-10px); }
+  60%     { opacity:0.3; transform: scale(1.1) translateY(-20px); }
+}
+
+/* ── 6. Gold shimmer on hero h1 and section-title ────── */
+@keyframes goldShimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+.hero h1,
+.section-title em,
+.split-h2 em,
+.cta-banner-h2 em {
+  background: linear-gradient(
+    90deg,
+    #C8A04A 0%,
+    #F0D080 30%,
+    #C8A04A 50%,
+    #B8962E 70%,
+    #C8A04A 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: goldShimmer 4s linear infinite;
+}
+
+/* ── 7. Booking progress bar fill animation ──────────── */
+@keyframes stepFill {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+.p-step.active .p-step-line {
+  animation: stepFill 0.5s ease forwards;
+  transform-origin: left;
+}
+.p-step .p-num {
+  transition: background 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+}
+.p-step.active .p-num {
+  box-shadow: 0 0 12px rgba(200,160,74,0.5);
+  transform: scale(1.1);
+}
+
+/* ── 8. Skeleton loader ──────────────────────────────── */
+@keyframes shimmerSlide {
+  0%   { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+.skeleton {
+  background: #1a1a1a;
+  border-radius: var(--radius);
+  position: relative;
+  overflow: hidden;
+  color: transparent !important;
+}
+.skeleton-shimmer,
+.skeleton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(200,160,74,0.07) 40%,
+    rgba(200,160,74,0.14) 50%,
+    rgba(200,160,74,0.07) 60%,
+    transparent 100%
+  );
+  background-size: 400px 100%;
+  animation: shimmerSlide 1.4s ease-in-out infinite;
+}
+.skeleton-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.skeleton-line {
+  height: 14px;
+  border-radius: 4px;
+  background: #1e1e1e;
+  position: relative;
+  overflow: hidden;
+}
+.skeleton-line::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(200,160,74,0.1), transparent);
+  background-size: 400px 100%;
+  animation: shimmerSlide 1.4s ease-in-out infinite;
+}
+.skeleton-line.w60 { width: 60%; }
+.skeleton-line.w40 { width: 40%; }
+.skeleton-line.w80 { width: 80%; }
+.skeleton-img {
+  height: 180px;
+  border-radius: var(--radius);
+  background: #1e1e1e;
+  position: relative;
+  overflow: hidden;
+}
+.skeleton-img::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(200,160,74,0.1), transparent);
+  background-size: 400px 100%;
+  animation: shimmerSlide 1.4s ease-in-out infinite;
+}
+
+/* ── 9. Counter animation (JS-driven, class added by script) */
+.stat-val[data-count] {
+  transition: opacity 0.3s;
+}
+
+/* ── 10. Page transition ─────────────────────────────── */
+@keyframes pageFadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+body.page-loaded {
+  animation: pageFadeIn 0.5s ease forwards;
+}
+@keyframes pageFadeOut {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(-6px); }
+}
+body.page-leaving {
+  animation: pageFadeOut 0.3s ease forwards;
+  pointer-events: none;
+}
+
+/* ── prefers-reduced-motion fallback ─────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .reveal, .reveal-left, .reveal-right {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .reveal.visible, .reveal-left.visible, .reveal-right.visible {
+    opacity: 1;
+    transform: none;
+  }
+  .hero-particles { display: none; }
+  .hero h1,
+  .section-title em,
+  .split-h2 em,
+  .cta-banner-h2 em {
+    animation: none;
+    background: none;
+    -webkit-text-fill-color: var(--gold);
+    color: var(--gold);
+  }
+  .skeleton::after, .skeleton-shimmer, .skeleton-line::after, .skeleton-img::after {
+    animation: none;
+  }
+  body.page-loaded, body.page-leaving { animation: none; }
+  .btn-gold:hover, .btn-outline:hover { transform: none !important; }
+}
