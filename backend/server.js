@@ -53,6 +53,7 @@ app.use('/api/bookings',  require('./routes/bookings'));
 app.use('/api/customers', require('./routes/customers'));
 app.use('/api/dashboard', require('./routes/dashboard'));
 app.use('/api/payments',  require('./routes/payments'));
+app.use('/api/home-services', require('./routes/home-services'));
 
 /* ── SPA fallback ────────────────────────────────────── */
 app.get('/', (_req, res) => {
@@ -84,6 +85,31 @@ async function runMigrations() {
   } catch (e) {
     // Abaikan jika sudah LONGTEXT atau tabel tidak ada kolom itu
     console.warn('[Migration] Warning:', e.message);
+  }
+
+  try {
+    await conn.query(`CREATE TABLE IF NOT EXISTS home_services (
+      id             INT AUTO_INCREMENT PRIMARY KEY,
+      user_id        INT           NOT NULL,
+      customer_name  VARCHAR(100)  NOT NULL,
+      phone          VARCHAR(20)   NOT NULL,
+      address        TEXT          NOT NULL,
+      service_id     INT           NOT NULL,
+      barber_id      INT           NOT NULL,
+      preferred_date DATE          NOT NULL,
+      preferred_time VARCHAR(10)   NOT NULL,
+      notes          TEXT,
+      status         ENUM('pending','confirmed','on_the_way','completed','cancelled') DEFAULT 'pending',
+      total_price    DECIMAL(10,2) NOT NULL,
+      travel_fee     DECIMAL(10,2) DEFAULT 25000,
+      created_at     TIMESTAMP     DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (user_id)    REFERENCES users(id),
+      FOREIGN KEY (service_id) REFERENCES services(id),
+      FOREIGN KEY (barber_id)  REFERENCES barbers(id)
+    )`);
+    console.log('[Migration] home_services table ready.');
+  } catch (e) {
+    console.warn('[Migration] home_services warning:', e.message);
   } finally {
     conn.release();
   }

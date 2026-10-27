@@ -1,0 +1,25 @@
+{
+  "id": "FEAT-001",
+  "type": "feat",
+  "description": "Backend: DB migration for home_services table + new REST route file backend/routes/home-services.js + register route in server.js. These three changes are the API foundation that FEAT-002 and FEAT-003 depend on.",
+  "status": "completed",
+  "steps": [
+    "1. In backend/server.js, inside the existing runMigrations() async function, after the two ALTER TABLE try/catch blocks, add a new try/catch block that runs: await conn.query(`CREATE TABLE IF NOT EXISTS home_services (id INT AUTO_INCREMENT PRIMARY KEY, user_id INT NOT NULL, customer_name VARCHAR(100) NOT NULL, phone VARCHAR(20) NOT NULL, address TEXT NOT NULL, service_id INT NOT NULL, barber_id INT NOT NULL, preferred_date DATE NOT NULL, preferred_time VARCHAR(10) NOT NULL, notes TEXT, status ENUM('pending','confirmed','on_the_way','completed','cancelled') DEFAULT 'pending', total_price DECIMAL(10,2) NOT NULL, travel_fee DECIMAL(10,2) DEFAULT 25000, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY (user_id) REFERENCES users(id), FOREIGN KEY (service_id) REFERENCES services(id), FOREIGN KEY (barber_id) REFERENCES barbers(id))`); The conn variable is already in scope from the getConnection() call at the top of runMigrations(). Log '[Migration] home_services table ready.' on success; warn on error.",
+    "2. Create backend/routes/home-services.js modelled on backend/routes/bookings.js. Import: require('express').Router(), pool from ../config/database, { auth, role } from ../middleware/auth. Implement 5 routes: POST / (auth, role customer): validate preferred_date >= today same as bookings.js line ~20; validate preferred_time regex and 09:00-21:00 range; parse service_id/barber_id as int; look up service (status=active) and barber (status=active); total_price = service.price + 25000; INSERT into home_services; re-fetch with JOINs and return 201. GET / (auth): admin sees all, customer WHERE user_id=req.user.id; support ?status= query param; JOIN services (name,price), barbers (name), users (name,email); ORDER BY created_at DESC; return { homeServices }. GET /:id (auth): same JOINs + customer guard AND user_id=req.user.id; 404 if not found. PUT /:id/status (auth, role admin): valid statuses ['pending','confirmed','on_the_way','completed','cancelled']; UPDATE home_services SET status=? WHERE id=?; 404 if no row affected. DELETE /:id (auth): UPDATE home_services SET status='cancelled' WHERE id=? AND status IN ('pending','confirmed') AND user_id=? (customer guard, admin skips user_id check same pattern as bookings.js DELETE); 400 if no row affected.",
+    "3. In backend/server.js, directly after the line 'app.use('/api/payments',  require('./routes/payments'));', add: app.use('/api/home-services', require('./routes/home-services'));"
+  ],
+  "acceptance_criteria": [
+    "node --check backend/routes/home-services.js exits 0 with no output",
+    "node --check backend/server.js exits 0 with no output",
+    "Server starts and log shows '[Migration] home_services table ready.' without error",
+    "GET /api/home-services with valid admin JWT returns { homeServices: [] } (HTTP 200)",
+    "POST /api/home-services with valid customer JWT and valid body returns HTTP 201 with homeService object containing id, status='pending', total_price = service.price + 25000"
+  ],
+  "verification": [
+    "node --check c:\\xamppnew\\htdocs\\EDPAbarber\\backend\\routes\\home-services.js",
+    "node --check c:\\xamppnew\\htdocs\\EDPAbarber\\backend\\server.js",
+    "cd c:\\xamppnew\\htdocs\\EDPAbarber\\backend && node server.js (check console output for migration line)"
+  ],
+  "blocked_reason": null,
+  "findings": "All three steps implemented successfully. (1) home_services CREATE TABLE IF NOT EXISTS block added to runMigrations() in server.js — the conn.release() was moved from the ALTER TABLE finally block to the new home_services finally block so conn remains open for the second query. (2) backend/routes/home-services.js created with all 5 REST routes (POST, GET /, GET /:id, PUT /:id/status, DELETE /:id) following the bookings.js pattern. VALID_STATUSES includes 'on_the_way' (new vs bookings). Travel fee hardcoded as 25000. No transaction needed for INSERT since there's no multi-table write. (3) Route registered in server.js immediately after /api/payments. Syntax checks for both modified/created files returned exit code 0."
+}
