@@ -1,0 +1,35 @@
+{
+  "id": "FEAT-003",
+  "type": "feat",
+  "description": "Frontend HTML updates to existing pages (index.html, customer-dashboard.html, admin-dashboard.html) + mirror all changed/new frontend files to backend/frontend/. Depends on FEAT-002 (JS functions must exist before the HTML elements that call them are present). Independent of FEAT-001 in terms of file edits, but the runtime depends on FEAT-001 API being available.",
+  "status": "completed",
+  "steps": [
+    "1. Update frontend/index.html — navbar: inside <ul class='nav'>, after the <li><a href='#about'>About</a></li> item, insert: <li><a href='home-service.html'>Home Service</a></li>. Do not touch any other navbar item.",
+    "2. Update frontend/index.html — homepage section: between the closing </section> of id='services-section' and the opening <section id='about'> block, insert a new <section class='section' id='home-service-section'>. Content: .section-header.reveal with eyebrow 'PANGKAS PANGGILAN', h2 'Home <em>Service.</em>', subtitle text, view-link to home-service.html. Below header: three .feat-item.reveal elements (icons 🏠 ✂ 💛 with titles 'Datang ke Lokasi' / 'Pilih Layanan & Barber' / 'Travel Fee Rp 25.000'). Below that: centered <a class='btn btn-gold btn-lg reveal' href='home-service.html'>PESAN HOME SERVICE ↗</a>. Use existing classes only.",
+    "3. Update frontend/customer-dashboard.html — inside .dash-body, after the closing </div> of the #historyList block (after its <div id='historyList'...>...</div>), append the home service history section: <div class='section-title-sm' style='margin-top:48px'>Home Service (Pangkas Panggilan)</div>, a link button <a class='btn btn-gold btn-sm' href='home-service.html'>+ HOME SERVICE BARU</a>, and <div id='hsHistoryList' class='booking-list'><div style='color:var(--muted);...'>Loading...</div></div>.",
+    "4. Update frontend/customer-dashboard.html — after the existing #bookingModal div (the last modal), add a new modal: <div id='hsModal' class='modal hidden'><div class='modal-card'><button class='modal-close' onclick='closeModal(\"hsModal\")'>×</button><div id='hsModalContent'></div></div></div>.",
+    "5. Update frontend/admin-dashboard.html — sidebar: inside the <ul class='sidebar-nav'> under the Management section label, after the <li> for payments, add: <li><a href='#' data-section='home-service'><span class='nav-ico'>🏠</span> Home Service</a></li>.",
+    "6. Update frontend/admin-dashboard.html — main content: after the closing </div> of id='sec-calendar', insert the full home service admin section div with id='sec-home-service' class='admin-section hidden'. Include: admin-section-header with title 'Home Service' + filter-row (select#hsFilterStatus with all 5 statuses + filter button calling loadAdminHomeServices()). Table with thead columns: ID / CUSTOMER / LAYANAN / BARBER / TANGGAL / JAM / ALAMAT / TRAVEL FEE / TOTAL / STATUS. tbody id='hsAdminTable' with loading placeholder. Wrap table in .table-overflow.table-wrap.",
+    "7. Mirror files to backend/frontend/: copy each of the following with Copy-Item -Force: frontend/home-service.html → backend/frontend/home-service.html; frontend/script.js → backend/frontend/script.js; frontend/index.html → backend/frontend/index.html; frontend/customer-dashboard.html → backend/frontend/customer-dashboard.html; frontend/admin-dashboard.html → backend/frontend/admin-dashboard.html.",
+    "8. Run final syntax checks: node --check backend/routes/home-services.js; node --check backend/server.js; node --check frontend/script.js — all must exit 0."
+  ],
+  "acceptance_criteria": [
+    "frontend/index.html navbar contains <a href='home-service.html'>Home Service</a>",
+    "frontend/index.html has a section with id='home-service-section' between services-section and about",
+    "frontend/customer-dashboard.html contains <div id='hsHistoryList'",
+    "frontend/admin-dashboard.html sidebar contains data-section='home-service'",
+    "frontend/admin-dashboard.html contains <div id='sec-home-service'",
+    "backend/frontend/home-service.html exists",
+    "All 5 mirrored files in backend/frontend/ have the same content as their frontend/ counterparts",
+    "node --check on all three JS files exits 0"
+  ],
+  "verification": [
+    "node --check c:\\xamppnew\\htdocs\\EDPAbarber\\backend\\routes\\home-services.js",
+    "node --check c:\\xamppnew\\htdocs\\EDPAbarber\\backend\\server.js",
+    "node --check c:\\xamppnew\\htdocs\\EDPAbarber\\frontend\\script.js",
+    "Test-Path c:\\xamppnew\\htdocs\\EDPAbarber\\backend\\frontend\\home-service.html (must return True)",
+    "Open http://localhost:3000 in browser — navbar shows Home Service link; homepage shows Home Service section"
+  ],
+  "blocked_reason": null,
+  "findings": "All 8 steps completed successfully. Navbar link added to index.html. Home-service-section inserted between services-section and about. hsHistoryList and hsModal added to customer-dashboard.html. Home Service sidebar nav item and sec-home-service admin section added to admin-dashboard.html. All 5 files mirrored to backend/frontend/. All three node --check syntax checks pass (exit 0). backend/frontend/home-service.html confirmed present (Test-Path returns True)."
+}

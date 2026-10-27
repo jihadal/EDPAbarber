@@ -25,6 +25,7 @@
       <li><a href="#" data-section="customers"><span class="nav-ico">🧑‍🤝‍🧑</span> Customers</a></li>
       <li><a href="#" data-section="payments"><span class="nav-ico">💳</span> Payments</a></li>
       <li><a href="#" data-section="calendar"><span class="nav-ico">🗓</span> Calendar</a></li>
+      <li><a href="#" data-section="home-service"><span class="nav-ico">🏠</span> Home Service</a></li>
     </ul>
     <div class="sidebar-footer">
       <button class="btn btn-outline full btn-sm" data-logout>LOGOUT</button>
@@ -163,6 +164,45 @@
               <div class="cal-legend-item"><div class="cal-legend-dot" style="background:rgba(200,160,74,.15)"></div>Completed</div>
             </div>
           </div>
+        </div>
+      </div>
+
+      <!-- HOME SERVICE SECTION -->
+      <div id="sec-home-service" class="admin-section hidden">
+        <div class="admin-section-header">
+          <div class="admin-section-title">Home Service</div>
+          <div class="filter-row">
+            <select id="hsFilterStatus" class="form-select">
+              <option value="">Semua status</option>
+              <option value="pending">Pending</option>
+              <option value="confirmed">Confirmed</option>
+              <option value="on_the_way">On The Way</option>
+              <option value="completed">Completed</option>
+              <option value="cancelled">Cancelled</option>
+            </select>
+            <button class="btn btn-gold btn-sm" onclick="loadAdminHomeServices()">FILTER</button>
+          </div>
+        </div>
+        <div class="table-overflow table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>CUSTOMER</th>
+                <th>LAYANAN</th>
+                <th>BARBER</th>
+                <th>TANGGAL</th>
+                <th>JAM</th>
+                <th>ALAMAT</th>
+                <th>TRAVEL FEE</th>
+                <th>TOTAL</th>
+                <th>STATUS</th>
+              </tr>
+            </thead>
+            <tbody id="hsAdminTable">
+              <tr><td colspan="10" style="color:var(--muted)">Loading...</td></tr>
+            </tbody>
+          </table>
         </div>
       </div>
 
