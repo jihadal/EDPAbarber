@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/png" href="favicon-16x16.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home Service — EDPAbarber</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<header class="site-header">
+  <div class="nav-inner">
+    <a class="brand" href="index.html"><span>EDPA</span><em>barber</em><span class="dot">.</span></a>
+    <button class="menu-toggle" onclick="document.querySelector('.nav').classList.toggle('open')">☰</button>
+    <ul class="nav">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="barbers.html">Barbers</a></li>
+      <li><a href="booking.html">Booking</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a class="btn btn-outline btn-sm" href="customer-dashboard.html">DASHBOARD</a>
+    </div>
+  </div>
+</header>
+
+<div class="booking-page">
+
+  <!-- Hero -->
+  <div class="booking-hero">
+    <div class="eyebrow-line">PANGKAS PANGGILAN</div>
+    <h1 class="booking-h1">Home <em>Service.</em></h1>
+    <p class="booking-sub">Barber profesional datang ke lokasi pilihanmu.</p>
+  </div>
+
+  <!-- Progress Bar -->
+  <div class="progress-bar">
+    <div class="progress-steps">
+      <div class="p-step active" id="hs-ps-1"><span class="p-step-num">01</span> Layanan<span class="p-step-line"></span></div>
+      <div class="p-step" id="hs-ps-2"><span class="p-step-num">02</span> Barber<span class="p-step-line"></span></div>
+      <div class="p-step" id="hs-ps-3"><span class="p-step-num">03</span> Jadwal<span class="p-step-line"></span></div>
+      <div class="p-step" id="hs-ps-4"><span class="p-step-num">04</span> Lokasi<span class="p-step-line"></span></div>
+      <div class="p-step" id="hs-ps-5"><span class="p-step-num">05</span> Ringkasan<span class="p-step-line"></span></div>
+      <div class="p-step" id="hs-ps-6"><span class="p-step-num">06</span> Selesai<span class="p-step-line"></span></div>
+    </div>
+  </div>
+
+  <!-- Step Content -->
+  <div class="booking-wrap">
+
+    <!-- STEP 1: LAYANAN -->
+    <div class="step-panel active" id="hs-step-1">
+      <div class="step-meta">
+        <span class="step-counter">STEP 01 / 06</span>
+        <span class="step-name">LAYANAN</span>
+      </div>
+      <h2 class="step-h2">Pilih <em>Layanan.</em></h2>
+      <p class="step-desc">Mulai dengan layanan yang kamu inginkan.</p>
+      <div id="hsServiceOptions" class="options-grid">
+        <div style="color:var(--muted);font-size:13px">Loading services...</div>
+      </div>
+      <div class="step-nav">
+        <button class="btn btn-gold" onclick="hsNext()">LANJUT →</button>
+      </div>
+      <p id="hs-msg-1" class="form-message error"></p>
+    </div>
+
+    <!-- STEP 2: BARBER -->
+    <div class="step-panel" id="hs-step-2">
+      <div class="step-meta">
+        <span class="step-counter">STEP 02 / 06</span>
+        <span class="step-name">BARBER</span>
+      </div>
+      <h2 class="step-h2">Pilih <em>Barber.</em></h2>
+      <p class="step-desc">Siapa yang akan datang ke lokasimu?</p>
+      <div id="hsBarberOptions" class="barber-options">
+        <div style="color:var(--muted);font-size:13px">Loading barbers...</div>
+      </div>
+      <div class="step-nav has-back">
+        <button class="btn btn-outline" onclick="hsBack()">← KEMBALI</button>
+        <button class="btn btn-gold" onclick="hsNext()">LANJUT →</button>
+      </div>
+      <p id="hs-msg-2" class="form-message error"></p>
+    </div>
+
+    <!-- STEP 3: JADWAL -->
+    <div class="step-panel" id="hs-step-3">
+      <div class="step-meta">
+        <span class="step-counter">STEP 03 / 06</span>
+        <span class="step-name">JADWAL</span>
+      </div>
+      <h2 class="step-h2">Pilih <em>Jadwal.</em></h2>
+      <p class="step-desc">Pilih tanggal dan jam yang cocok untukmu.</p>
+      <div style="max-width:400px">
+        <div class="form-group">
+          <label class="form-label">Tanggal kunjungan</label>
+          <input id="hsDate" type="date" class="form-input form-input large" oninput="hsOnDateChange(this.value)">
+        </div>
+        <p style="font-size:12px;color:var(--muted)">Jam operasional: 09:00 – 21:00, setiap hari.</p>
+      </div>
+      <div id="hsTimeGrid" class="time-grid"></div>
+      <div class="step-nav has-back">
+        <button class="btn btn-outline" onclick="hsBack()">← KEMBALI</button>
+        <button class="btn btn-gold" onclick="hsNext()">LANJUT →</button>
+      </div>
+      <p id="hs-msg-3" class="form-message error"></p>
+    </div>
+
+    <!-- STEP 4: LOKASI -->
+    <div class="step-panel" id="hs-step-4">
+      <div class="step-meta">
+        <span class="step-counter">STEP 04 / 06</span>
+        <span class="step-name">LOKASI</span>
+      </div>
+      <h2 class="step-h2">Isi <em>Lokasi.</em></h2>
+      <p class="step-desc">Isi detail lokasi agar barber bisa menemukan kamu.</p>
+      <div class="form-group">
+        <label class="form-label">Nama Lengkap *</label>
+        <input id="hsName" type="text" class="form-input" placeholder="Nama lengkap pemesan" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label">No. HP *</label>
+        <input id="hsPhone" type="tel" class="form-input" placeholder="Contoh: 08123456789" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Alamat Lengkap *</label>
+        <textarea id="hsAddress" class="form-textarea" rows="3" placeholder="Jl. ..., No. ..., Kelurahan, Kecamatan, Kota" required></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Catatan (opsional)</label>
+        <textarea id="hsNotes" class="form-textarea" rows="2" placeholder="Contoh: patokan rumah, gaya rambut yang diinginkan..."></textarea>
+      </div>
+      <div class="step-nav has-back">
+        <button class="btn btn-outline" onclick="hsBack()">← KEMBALI</button>
+        <button class="btn btn-gold" onclick="hsNext()">LANJUT →</button>
+      </div>
+      <p id="hs-msg-4" class="form-message error"></p>
+    </div>
+
+    <!-- STEP 5: RINGKASAN -->
+    <div class="step-panel" id="hs-step-5">
+      <div class="step-meta">
+        <span class="step-counter">STEP 05 / 06</span>
+        <span class="step-name">RINGKASAN</span>
+      </div>
+      <h2 class="step-h2">Ringkasan <em>Pesanan.</em></h2>
+      <p class="step-desc">Pastikan semuanya sudah benar sebelum memesan.</p>
+
+      <!-- DP Notice -->
+      <div style="background:rgba(184,150,46,0.08);border:1px solid rgba(184,150,46,0.3);border-radius:var(--radius);padding:16px 20px;margin-bottom:24px;display:flex;gap:14px;align-items:flex-start">
+        <span style="font-size:22px;flex-shrink:0">🏠</span>
+        <div>
+          <div style="font-size:13px;font-weight:700;color:var(--gold);margin-bottom:4px;letter-spacing:0.5px">WAJIB DP 50% DI MUKA</div>
+          <div style="font-size:12px;color:var(--muted2);line-height:1.7">
+            Booking home service ini memerlukan <strong style="color:var(--text)">Down Payment (DP) sebesar 50%</strong> dari total harga sebagai tanda jadi.<br>
+            Sisa pembayaran <strong style="color:var(--text)">50%</strong> dilunasi saat barber tiba di lokasimu.
+          </div>
+        </div>
+      </div>
+
+      <div class="summary-card">
+        <div class="summary-row"><span class="sum-key">LAYANAN</span><span class="sum-val" id="hs-sum-service">—</span></div>
+        <div class="summary-row"><span class="sum-key">BARBER</span><span class="sum-val" id="hs-sum-barber">—</span></div>
+        <div class="summary-row"><span class="sum-key">TANGGAL &amp; JAM</span><span class="sum-val" id="hs-sum-datetime">—</span></div>
+        <div class="summary-row"><span class="sum-key">ALAMAT</span><span class="sum-val" id="hs-sum-address">—</span></div>
+        <div class="summary-row"><span class="sum-key">CATATAN</span><span class="sum-val" id="hs-sum-notes" style="color:var(--muted)">Tidak ada</span></div>
+        <div class="summary-row"><span class="sum-key">HARGA LAYANAN</span><span class="sum-val" id="hs-sum-service-price">—</span></div>
+        <div class="summary-row"><span class="sum-key">TRAVEL FEE</span><span class="sum-val" id="hs-sum-travel">Rp 25.000</span></div>
+        <div class="summary-row"><span class="sum-key">TOTAL</span><span class="sum-total" id="hs-sum-total">—</span></div>
+      </div>
+      <div class="step-nav has-back">
+        <button class="btn btn-outline" onclick="hsBack()">← KEMBALI</button>
+        <button class="btn btn-gold btn-lg" id="hsSubmitBtn" onclick="submitHomeService()">PESAN SEKARANG →</button>
+      </div>
+      <p id="hs-msg-5" class="form-message error"></p>
+    </div>
+
+    <!-- STEP 6: SELESAI -->
+    <div class="step-panel" id="hs-step-6">
+      <div class="step-meta">
+        <span class="step-counter">STEP 06 / 06</span>
+        <span class="step-name">SELESAI</span>
+      </div>
+      <div style="text-align:center;padding:40px 0 20px">
+        <div class="confirm-icon">✓</div>
+        <div class="eyebrow-line" style="justify-content:center;margin-bottom:12px">PESANAN DITERIMA</div>
+        <h2 class="step-h2">Pesanan <em>Diterima!</em></h2>
+        <p class="step-desc" style="max-width:480px;margin:0 auto 28px">
+          Pesanan home service kamu sudah kami terima.<br>
+          Booking ID kamu:
+        </p>
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px 32px;display:inline-block;margin-bottom:32px">
+          <div style="font-size:11px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:8px">Booking ID</div>
+          <div style="font-size:28px;font-weight:900;color:var(--gold);letter-spacing:4px" id="hsBookingId">—</div>
+        </div>
+        <p style="font-size:13px;color:var(--muted);margin-bottom:32px;line-height:1.8">
+          Barber akan segera menghubungi kamu untuk konfirmasi kedatangan.<br>
+          Pastikan HP kamu aktif dan bisa dihubungi.
+        </p>
+        <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+          <a class="btn btn-gold" href="customer-dashboard.html">LIHAT DASHBOARD</a>
+          <a class="btn btn-outline" href="home-service.html">PESAN LAGI</a>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /booking-wrap -->
+</div><!-- /booking-page -->
+
+<script src="script.js"></script>
+</body>
+</html>

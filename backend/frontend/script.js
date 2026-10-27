@@ -510,6 +510,7 @@ function renderPaymentStep() {
   const caEl  = document.getElementById('cashAmount');
   const dpEl  = document.getElementById('dpAmount');
   const remEl = document.getElementById('remainAmount');
+  const qaLbl = document.getElementById('qrAmountLabel');
 
   if (qaEl) qaEl.textContent = dpFmt;
   if (caEl) caEl.textContent = price;
@@ -810,6 +811,9 @@ async function initCustomerDash() {
       btn.onclick = () => showBookingDetail(btn.dataset.id, bookings);
     });
 
+    // Load home service history
+    loadHsHistory();
+
   } catch (e) {
     alert('Gagal memuat dashboard: ' + e.message);
   }
@@ -904,7 +908,8 @@ async function initAdmin() {
       $(`#sec-${sec}`)?.classList.remove('hidden');
       const titleMap = {
         dashboard: 'Dashboard', bookings: 'Bookings', services: 'Services',
-        barbers: 'Barbers', customers: 'Customers', payments: 'Payments', calendar: 'Calendar'
+        barbers: 'Barbers', customers: 'Customers', payments: 'Payments', calendar: 'Calendar',
+        'home-service': 'Home Service'
       };
       const titleEl = $('#adminPageTitle'); if (titleEl) titleEl.textContent = titleMap[sec] || sec;
       if (sec === 'bookings')  loadAdminBookings();
@@ -913,6 +918,7 @@ async function initAdmin() {
       if (sec === 'customers') loadAdminCustomers();
       if (sec === 'payments')  loadAdminPayments();
       if (sec === 'calendar')  renderCalendar();
+      if (sec === 'home-service') loadAdminHomeServices();
     });
   });
 
@@ -1494,7 +1500,338 @@ document.addEventListener('DOMContentLoaded', () => {
   if (page === 'preview.html')           initPreview();
   if (page === 'customer-dashboard.html') initCustomerDash();
   if (page === 'admin-dashboard.html')   initAdmin();
+  if (page === 'home-service.html')      initHomeService();
 });
+
+/* =====================================================
+   HOME SERVICE — Pangkas Panggilan
+   ===================================================== */
+
+// State object
+let hs = {
+  step: 1,
+  service: null,  // {id, name, price, rawPrice, duration}
+  barber:  null,  // {id, name, specialization}
+  date:    '',
+  time:    '',
+  name:    '',
+  phone:   '',
+  address: '',
+  notes:   ''
+};
+window.hs = hs;
+
+async function initHomeService() {
+  if (!$('#hs-step-1')) return;
+  if (!requireAuth('customer')) return;
+
+  try {
+    const [{ services }, { barbers }] = await Promise.all([
+      api('/services?status=active'),
+      api('/barbers?status=active')
+    ]);
+    window._hsServices = services;
+    window._hsBarbers  = barbers;
+    renderHsServiceOptions(services);
+    renderHsBarberOptions(barbers);
+  } catch (e) {
+    const el = $('#hsServiceOptions');
+    if (el) el.innerHTML = `<p class="form-message error">${esc(e.message)}</p>`;
+  }
+
+  // Min date = today (today allowed)
+  const dateInput = $('#hsDate');
+  if (dateInput) {
+    dateInput.min = new Date().toISOString().slice(0, 10);
+  }
+
+  hsGoStep(1);
+}
+
+function renderHsServiceOptions(services) {
+  const el = $('#hsServiceOptions');
+  if (!el) return;
+  el.innerHTML = services.map(s => `
+    <div class="option-card" id="hs-svc-${s.id}" onclick="hsSelectService(${s.id})">
+      <div class="opt-radio"><div class="opt-radio-dot"></div></div>
+      <div class="opt-body">
+        <div class="opt-name">${esc(s.name)}</div>
+        <div class="opt-desc">${esc(s.description || '')} · ${s.duration} menit</div>
+      </div>
+      <div class="opt-right">
+        <div class="opt-price">${money(s.price)}</div>
+        <div class="opt-dur">${s.duration} menit</div>
+      </div>
+    </div>`).join('');
+}
+
+function renderHsBarberOptions(barbers) {
+  const el = $('#hsBarberOptions');
+  if (!el) return;
+  el.innerHTML = barbers.map((b, i) => `
+    <div class="barber-opt" id="hs-brb-${b.id}" onclick="hsSelectBarber(${b.id})">
+      <div class="barber-opt-num">${String(i + 1).padStart(2, '0')}</div>
+      <div style="flex:1">
+        <div class="barber-opt-name">${esc(b.name)}</div>
+        <div class="barber-opt-role">${esc(b.specialization || 'Master Barber')}</div>
+      </div>
+      <div class="opt-radio"><div class="opt-radio-dot"></div></div>
+    </div>`).join('');
+}
+
+window.hsSelectService = function(id) {
+  const numId = Number(id);
+  const container = $('#hsServiceOptions');
+  if (container) $$('.option-card', container).forEach(c => c.classList.remove('selected'));
+  $(`#hs-svc-${numId}`)?.classList.add('selected');
+  const s = (window._hsServices || []).find(x => x.id === numId);
+  if (s) {
+    hs.service = { id: s.id, name: s.name, price: money(s.price), rawPrice: s.price, duration: s.duration };
+  }
+};
+
+window.hsSelectBarber = function(id) {
+  const numId = Number(id);
+  const container = $('#hsBarberOptions');
+  if (container) $$('.barber-opt', container).forEach(c => c.classList.remove('selected'));
+  $(`#hs-brb-${numId}`)?.classList.add('selected');
+  const b = (window._hsBarbers || []).find(x => x.id === numId);
+  if (b) {
+    hs.barber = { id: b.id, name: b.name, specialization: b.specialization };
+  }
+};
+
+window.hsOnDateChange = function(val) {
+  hs.date = val;
+  hs.time = '';
+  renderHsTimeSlots();
+};
+
+async function renderHsTimeSlots() {
+  const el = $('#hsTimeGrid');
+  if (!el) return;
+
+  const slots = [];
+  for (let h = 9; h <= 20; h++) {
+    slots.push(`${String(h).padStart(2, '0')}:00`);
+    if (h < 20) slots.push(`${String(h).padStart(2, '0')}:30`);
+  }
+
+  // Fetch taken slots for selected barber + date from home-services
+  let taken = [];
+  if (hs.barber?.id && hs.date) {
+    try {
+      const { homeServices } = await api('/home-services');
+      taken = homeServices
+        .filter(h2 =>
+          ['pending', 'confirmed'].includes(h2.status) &&
+          h2.barber_id === hs.barber.id &&
+          String(h2.preferred_date).slice(0, 10) === hs.date
+        )
+        .map(h2 => h2.preferred_time?.slice(0, 5));
+    } catch {}
+  }
+
+  el.innerHTML = slots.map(t => {
+    const unavail = taken.includes(t);
+    return `<button type="button"
+      class="time-btn ${hs.time === t ? 'selected' : ''} ${unavail ? 'unavailable' : ''}"
+      onclick="hsSelectTime('${t}')"
+      ${unavail ? 'disabled title="Slot sudah dipesan"' : ''}
+    >${t}</button>`;
+  }).join('');
+}
+
+window.hsSelectTime = function(t) {
+  hs.time = t;
+  const grid = $('#hsTimeGrid');
+  if (grid) {
+    $$('.time-btn', grid).forEach(b => {
+      b.classList.toggle('selected', b.textContent.trim() === t);
+    });
+  }
+};
+
+function hsGoStep(n) {
+  // Hide all hs step panels
+  $$('[id^="hs-step-"]').forEach(p => p.classList.remove('active'));
+  const panel = $(`#hs-step-${n}`);
+  if (panel) panel.classList.add('active');
+
+  // Update progress
+  for (let i = 1; i <= 6; i++) {
+    const ps = $(`#hs-ps-${i}`);
+    if (!ps) continue;
+    ps.classList.remove('active', 'done');
+    if (i < n) ps.classList.add('done');
+    else if (i === n) ps.classList.add('active');
+  }
+
+  hs.step = n;
+  if (n === 3) renderHsTimeSlots();
+  if (n === 5) renderHsSummary();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+window.hsNext = function() {
+  const msgEl = $(`#hs-msg-${hs.step}`);
+  if (msgEl) msgEl.textContent = '';
+
+  if (hs.step === 1) {
+    if (!hs.service) { if (msgEl) msgEl.textContent = 'Pilih layanan terlebih dahulu.'; return; }
+  }
+  if (hs.step === 2) {
+    if (!hs.barber) { if (msgEl) msgEl.textContent = 'Pilih barber terlebih dahulu.'; return; }
+  }
+  if (hs.step === 3) {
+    if (!hs.date) { if (msgEl) msgEl.textContent = 'Pilih tanggal terlebih dahulu.'; return; }
+    if (!hs.time) { if (msgEl) msgEl.textContent = 'Pilih jam terlebih dahulu.'; return; }
+  }
+  if (hs.step === 4) {
+    hs.name    = $('#hsName')?.value.trim()    || '';
+    hs.phone   = $('#hsPhone')?.value.trim()   || '';
+    hs.address = $('#hsAddress')?.value.trim() || '';
+    hs.notes   = $('#hsNotes')?.value.trim()   || '';
+    if (!hs.name)    { if (msgEl) msgEl.textContent = 'Nama lengkap wajib diisi.'; return; }
+    if (!hs.phone)   { if (msgEl) msgEl.textContent = 'No. HP wajib diisi.'; return; }
+    if (!hs.address) { if (msgEl) msgEl.textContent = 'Alamat lengkap wajib diisi.'; return; }
+  }
+
+  if (hs.step < 6) hsGoStep(hs.step + 1);
+};
+
+window.hsBack = function() {
+  if (hs.step > 1) hsGoStep(hs.step - 1);
+};
+
+function renderHsSummary() {
+  const set = (id, val) => { const el = $(id); if (el) el.textContent = val; };
+  set('#hs-sum-service',       hs.service?.name  || '—');
+  set('#hs-sum-barber',        hs.barber?.name   || '—');
+  set('#hs-sum-datetime',      fmtDatetime(hs.date, hs.time));
+  set('#hs-sum-address',       hs.address        || '—');
+  set('#hs-sum-notes',         hs.notes?.trim()  || 'Tidak ada');
+  set('#hs-sum-service-price', hs.service?.rawPrice != null ? money(hs.service.rawPrice) : (hs.service?.price || '—'));
+  set('#hs-sum-travel',        money(25000));
+  set('#hs-sum-total',         hs.service?.rawPrice != null ? money(hs.service.rawPrice + 25000) : '—');
+}
+
+window.submitHomeService = async function() {
+  const btn = $('#hsSubmitBtn');
+  const msg = $('#hs-msg-5');
+  if (btn) { btn.disabled = true; btn.style.opacity = '.6'; btn.textContent = 'Memproses...'; }
+  if (msg) { msg.textContent = ''; msg.className = 'form-message'; }
+
+  try {
+    const { homeService } = await api('/home-services', {
+      method: 'POST',
+      body: JSON.stringify({
+        service_id:     hs.service.id,
+        barber_id:      hs.barber.id,
+        preferred_date: hs.date,
+        preferred_time: hs.time,
+        address:        hs.address,
+        phone:          hs.phone,
+        customer_name:  hs.name,
+        notes:          hs.notes || null
+      })
+    });
+    const idEl = $('#hsBookingId');
+    if (idEl) idEl.textContent = homeService.id || homeService.booking_id || '—';
+    hsGoStep(6);
+  } catch (err) {
+    if (msg) { msg.textContent = err.message; msg.className = 'form-message error'; }
+    if (btn) { btn.disabled = false; btn.style.opacity = '1'; btn.textContent = 'PESAN SEKARANG →'; }
+  }
+};
+
+async function loadHsHistory() {
+  const el = $('#hsHistoryList');
+  if (!el) return;
+  try {
+    const { homeServices } = await api('/home-services');
+    if (!homeServices.length) {
+      el.innerHTML = '<p style="color:var(--muted);font-size:13px;padding:10px 0">Belum ada pesanan home service.</p>';
+      return;
+    }
+    el.innerHTML = homeServices.map(h2 => `
+      <div class="booking-item">
+        <div class="booking-item-left">
+          <div>
+            <div class="booking-service-name">${esc(h2.service_name || '—')}</div>
+            <div class="booking-meta-text">${esc(h2.barber_name || '—')} · ${dateID(h2.preferred_date)} · ${h2.preferred_time?.slice(0,5) || '—'}</div>
+            <div class="booking-meta-text" style="color:var(--muted);font-size:11px;margin-top:2px">${esc((h2.address || '').slice(0, 40))}${(h2.address || '').length > 40 ? '…' : ''}</div>
+          </div>
+        </div>
+        <div class="booking-actions">
+          <span class="badge ${esc(h2.status)}">${esc(h2.status)}</span>
+          ${['pending', 'confirmed'].includes(h2.status)
+            ? `<button class="btn btn-danger btn-sm" onclick="cancelHomeService(${h2.id})">Batal</button>`
+            : ''}
+        </div>
+      </div>`).join('');
+  } catch (e) {
+    el.innerHTML = `<p class="form-message error">${esc(e.message)}</p>`;
+  }
+}
+
+window.cancelHomeService = async function(id) {
+  if (!confirm('Batalkan pesanan home service ini?')) return;
+  try {
+    await api(`/home-services/${id}`, { method: 'DELETE' });
+    loadHsHistory();
+  } catch (e) {
+    alert(e.message);
+  }
+};
+
+async function loadAdminHomeServices() {
+  const tbody = $('#hsAdminTable');
+  if (!tbody) return;
+  const statusVal = $('#hsFilterStatus')?.value || '';
+  const q = statusVal ? `?status=${encodeURIComponent(statusVal)}` : '';
+  try {
+    const { homeServices } = await api('/home-services' + q);
+    if (!homeServices.length) {
+      tbody.innerHTML = '<tr><td colspan="10" style="color:var(--muted)">Tidak ada data home service.</td></tr>';
+      return;
+    }
+    tbody.innerHTML = homeServices.map(h2 => `
+      <tr>
+        <td>${h2.id}</td>
+        <td>${esc(h2.customer_name || h2.user_name || '—')}</td>
+        <td>${esc(h2.service_name || '—')}</td>
+        <td>${esc(h2.barber_name || '—')}</td>
+        <td>${dateID(h2.preferred_date)}</td>
+        <td>${h2.preferred_time?.slice(0,5) || '—'}</td>
+        <td style="max-width:160px;font-size:11px;color:var(--muted)">${esc(h2.address || '—')}</td>
+        <td style="color:var(--gold)">${money(25000)}</td>
+        <td style="color:var(--gold)">${h2.service_price != null ? money(Number(h2.service_price) + 25000) : '—'}</td>
+        <td>
+          <select class="status-select" data-id="${h2.id}" data-prev="${esc(h2.status)}" onchange="updateHsStatus(this)">
+            ${['pending','confirmed','completed','cancelled'].map(st =>
+              `<option value="${st}" ${st === h2.status ? 'selected' : ''}>${st}</option>`
+            ).join('')}
+          </select>
+        </td>
+      </tr>`).join('');
+  } catch (e) {
+    tbody.innerHTML = `<tr><td colspan="10" class="form-message error">${esc(e.message)}</td></tr>`;
+  }
+}
+
+window.updateHsStatus = async function(sel) {
+  try {
+    await api(`/home-services/${sel.dataset.id}/status`, {
+      method: 'PUT',
+      body: JSON.stringify({ status: sel.value })
+    });
+    sel.dataset.prev = sel.value;
+  } catch (e) {
+    alert(e.message);
+    sel.value = sel.dataset.prev;
+  }
+};
 
 /* =====================================================
    ANIMATIONS — Modern EDPAbarber

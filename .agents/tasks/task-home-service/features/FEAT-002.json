@@ -1,0 +1,49 @@
+{
+  "id": "FEAT-002",
+  "type": "feat",
+  "description": "Frontend: create home-service.html 6-step booking page + append all Home Service JS to script.js (initHomeService, hs state, step navigation, renderHsServiceOptions, renderHsBarberOptions, renderHsTimeSlots, renderHsSummary, submitHomeService, loadHsHistory, cancelHomeService, loadAdminHomeServices, updateHsStatus). Depends on FEAT-001 (API must exist). Independent of FEAT-003 (page updates to index/dashboard/admin are separate).",
+  "status": "completed",
+  "steps": [
+    "1. Create frontend/home-service.html. Copy the overall shell from frontend/booking.html (doctype, head with style.css link, navbar with links Home/Services/Barbers/Booking, script src=script.js). Change title to 'Home Service — EDPAbarber'. Change booking-hero h1 to 'Home <em>Service.</em>' and subtitle to 'Barber profesional datang ke lokasi pilihanmu.'. Build progress bar with 6 .p-step items (ids hs-ps-1 through hs-ps-6): 01 Layanan / 02 Barber / 03 Jadwal / 04 Lokasi / 05 Ringkasan / 06 Selesai. Build 6 step panels (ids hs-step-1 through hs-step-6) using the same .step-panel class pattern.",
+    "2. Step 1 (Layanan): step-meta shows STEP 01/06, LAYANAN. h2 'Pilih <em>Layanan.</em>'. Container <div id='hsServiceOptions' class='options-grid'> for dynamic content. Step nav: next only button calling hsNext().",
+    "3. Step 2 (Barber): step-meta STEP 02/06. h2 'Pilih <em>Barber.</em>'. Container <div id='hsBarberOptions' class='barber-options'>. Step nav: back + next.",
+    "4. Step 3 (Jadwal): step-meta STEP 03/06. h2 'Pilih <em>Jadwal.</em>'. Date input: <input id='hsDate' type='date' class='form-input' oninput='hsOnDateChange(this.value)'>. Time grid: <div id='hsTimeGrid' class='time-grid'>. Step nav: back + next. Error p id='hs-msg-3'.",
+    "5. Step 4 (Lokasi): step-meta STEP 04/06. h2 'Isi <em>Lokasi.</em>'. Four .form-group blocks: input#hsName (Nama Lengkap, required), input#hsPhone (No. HP, required), textarea#hsAddress rows=3 (Alamat Lengkap, required), textarea#hsNotes rows=2 (Catatan, optional). Step nav: back + next. Error p id='hs-msg-4'.",
+    "6. Step 5 (Ringkasan): step-meta STEP 05/06. h2 'Ringkasan <em>Pesanan.</em>'. .summary-card with .summary-row items: #hs-sum-service (Layanan), #hs-sum-barber (Barber), #hs-sum-datetime (Tanggal & Jam), #hs-sum-address (Alamat), #hs-sum-notes (Catatan), #hs-sum-service-price (Harga Layanan), #hs-sum-travel (Travel Fee, always Rp 25.000), #hs-sum-total with class 'sum-total' (Total). Step nav: back + button id='hsSubmitBtn' onclick='submitHomeService()' class='btn btn-gold btn-lg'. Error p id='hs-msg-5'.",
+    "7. Step 6 (Selesai): step-meta STEP 06/06. Success panel with ✓ icon, h2 'Pesanan <em>Diterima!</em>', p showing booking created, span id='hsBookingId' for the returned ID, two buttons: <a class='btn btn-gold' href='customer-dashboard.html'>LIHAT DASHBOARD</a> and <a class='btn btn-outline' href='home-service.html'>PESAN LAGI</a>.",
+    "8. Append to frontend/script.js (add after the closing brace of initCustomerDash, before the ANIMATIONS IIFE). Add state object: let hs = { step:1, service:null, barber:null, date:'', time:'', name:'', phone:'', address:'', notes:'' }; window.hs = hs;",
+    "9. Add function initHomeService(): if (!$('#hs-step-1')) return; if (!requireAuth('customer')) return; fetch /services?status=active and /barbers?status=active in parallel with Promise.all; call renderHsServiceOptions(services) and renderHsBarberOptions(barbers); set $('#hsDate').min to new Date().toISOString().slice(0,10); call hsGoStep(1).",
+    "10. Add renderHsServiceOptions(services): renders option-card divs into #hsServiceOptions using same template as renderServiceOptions() in existing code, but with ids 'hs-svc-N' and onclick='hsSelectService(N)'.",
+    "11. Add renderHsBarberOptions(barbers): renders barber-opt divs into #hsBarberOptions using same template as renderBarberOptions() in existing code, but with ids 'hs-brb-N' and onclick='hsSelectBarber(N)'. Scoped querySelector must look only inside #hsBarberOptions.",
+    "12. Add window.hsSelectService(id): clears .option-card.selected inside #hsServiceOptions, adds .selected to #hs-svc-{id}, sets hs.service = { id, name, price: money(s.price), rawPrice: s.price, duration: s.duration } from window._hsServices.",
+    "13. Add window.hsSelectBarber(id): clears .barber-opt.selected inside #hsBarberOptions, adds .selected to #hs-brb-{id}, sets hs.barber = { id, name, specialization } from window._hsBarbers.",
+    "14. Add window.hsOnDateChange(val): sets hs.date=val, hs.time=''; calls renderHsTimeSlots().",
+    "15. Add async renderHsTimeSlots(): build slots array 09:00–21:00 same as existing renderTimeSlots(). Fetch /home-services if hs.barber?.id && hs.date to find taken slots (status pending/confirmed, same preferred_date and barber_id). Render .time-btn buttons into #hsTimeGrid; onclick='hsSelectTime(\"HH:MM\")'.",
+    "16. Add window.hsSelectTime(t): sets hs.time=t; clears .time-btn.selected in #hsTimeGrid; adds .selected to the matching button.",
+    "17. Add hsGoStep(n): hides all elements matching [id^='hs-step-'], shows #hs-step-{n}; updates [id^='hs-ps-'] progress items (done/active); sets hs.step=n; if n===3 call renderHsTimeSlots(); if n===5 call renderHsSummary(); window.scrollTo top.",
+    "18. Add window.hsNext(): validate per step (step1: hs.service; step2: hs.barber; step3: hs.date then hs.time; step4: read #hsName.value #hsPhone.value #hsAddress.value #hsNotes.value into hs.name/phone/address/notes, require name+phone+address). Show error in #hs-msg-{step} on failure. On pass call hsGoStep(hs.step+1).",
+    "19. Add window.hsBack(): if (hs.step > 1) hsGoStep(hs.step - 1).",
+    "20. Add renderHsSummary(): fill all #hs-sum-* elements. Travel fee: money(25000). Total: money(hs.service.rawPrice + 25000).",
+    "21. Add window.submitHomeService(): disable #hsSubmitBtn; POST /api/home-services with body {service_id:hs.service.id, barber_id:hs.barber.id, preferred_date:hs.date, preferred_time:hs.time, address:hs.address, phone:hs.phone, customer_name:hs.name, notes:hs.notes||null}. On success: set #hsBookingId.textContent to returned homeService.id; call hsGoStep(6). On error: show error in #hs-msg-5; re-enable button.",
+    "22. Add async loadHsHistory(): fetch GET /api/home-services; render into #hsHistoryList (added in FEAT-003 to customer-dashboard.html) using .booking-item divs showing service_name, barber_name, preferred_date, preferred_time, address (truncated to 40 chars), status badge, cancel button for pending/confirmed calling cancelHomeService(id).",
+    "23. Add window.cancelHomeService(id): confirm dialog; DELETE /api/home-services/{id}; on success call loadHsHistory().",
+    "24. Add async loadAdminHomeServices(): get ?status= from #hsFilterStatus value; fetch GET /api/home-services?status=...; render into #hsAdminTable tbody (added in FEAT-003 to admin-dashboard.html) with columns ID/Customer/Layanan/Barber/Tanggal/Jam/Alamat/Travel Fee/Total/Status-select.",
+    "25. Add window.updateHsStatus(sel): PUT /api/home-services/{sel.dataset.id}/status with { status: sel.value }; on error alert + revert sel.value.",
+    "26. In the DOMContentLoaded router block (the if/if/if chain near bottom of script.js), add: if (page === 'home-service.html') initHomeService();",
+    "27. In initAdmin()'s titleMap object, add: 'home-service': 'Home Service'. In the section-switching forEach listener (the block that calls loadAdminBookings, loadAdminServices, etc.), add: if (sec === 'home-service') loadAdminHomeServices();",
+    "28. In initCustomerDash(), after the block that attaches .detail-btn handlers, add a call to loadHsHistory() so the home service history loads when the dashboard inits."
+  ],
+  "acceptance_criteria": [
+    "node --check frontend/script.js exits 0 with no output",
+    "Opening home-service.html in browser shows Step 1 with service options after login",
+    "All 6 steps navigate forward/back without errors",
+    "Submitting Step 5 POSTs to /api/home-services and advances to Step 6 with the booking ID shown",
+    "customer-dashboard.html shows Home Service history section (loads after FEAT-003 adds the HTML element)"
+  ],
+  "verification": [
+    "node --check c:\\xamppnew\\htdocs\\EDPAbarber\\frontend\\script.js",
+    "Open http://localhost:3000/home-service.html in browser after server start — no console errors, service options visible"
+  ],
+  "blocked_reason": null,
+  "findings": "All 28 steps implemented. home-service.html created with 6-step form (Layanan/Barber/Jadwal/Lokasi/Ringkasan/Selesai), styled with existing CSS classes. Home Service JS block appended to script.js: state object (hs), initHomeService, renderHsServiceOptions, renderHsBarberOptions, hsSelectService, hsSelectBarber, hsOnDateChange, renderHsTimeSlots, hsSelectTime, hsGoStep, hsNext, hsBack, renderHsSummary, submitHomeService, loadHsHistory, cancelHomeService, loadAdminHomeServices, updateHsStatus. Router updated with initHomeService(). initAdmin titleMap and section switch updated. initCustomerDash updated to call loadHsHistory(). Both files mirrored to backend/frontend/. node --check exits 0."
+}
