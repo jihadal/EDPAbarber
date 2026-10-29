@@ -1806,10 +1806,10 @@ async function loadAdminHomeServices() {
         <td>${h2.preferred_time?.slice(0,5) || '—'}</td>
         <td style="max-width:160px;font-size:11px;color:var(--muted)">${esc(h2.address || '—')}</td>
         <td style="color:var(--gold)">${money(25000)}</td>
-        <td style="color:var(--gold)">${h2.service_price != null ? money(Number(h2.service_price) + 25000) : '—'}</td>
+        <td style="color:var(--gold)">${h2.total_price != null ? money(Number(h2.total_price)) : '—'}</td>
         <td>
           <select class="status-select" data-id="${h2.id}" data-prev="${esc(h2.status)}" onchange="updateHsStatus(this)">
-            ${['pending','confirmed','completed','cancelled'].map(st =>
+            ${['pending','confirmed','on_the_way','completed','cancelled'].map(st =>
               `<option value="${st}" ${st === h2.status ? 'selected' : ''}>${st}</option>`
             ).join('')}
           </select>

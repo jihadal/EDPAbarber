@@ -40,7 +40,7 @@ router.post('/', auth, role('customer'), async (req, res, next) => {
   if (!/^([01]\d|2[0-3]):[0-5]\d$/.test(preferred_time || '')) {
     return res.status(400).json({ message: 'Invalid preferred time format.' });
   }
-  if (preferred_time < '09:00' || preferred_time > '20:30') {
+  if (preferred_time < '09:00' || preferred_time > '21:00') {
     return res.status(400).json({ message: 'Service hours are 09:00 – 21:00 WIB.' });
   }
 
