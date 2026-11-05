@@ -99,7 +99,6 @@ function buildServiceCard(s, index, total) {
         <div class="service-footer">
           <div>
             <div class="service-price">${money(s.price)}</div>
-            <div class="service-dur">${s.duration} menit</div>
           </div>
           <a class="btn btn-gold btn-sm" href="booking.html?service_id=${s.id}">BOOK NOW</a>
         </div>
