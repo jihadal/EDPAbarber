@@ -102,10 +102,7 @@ async function runMigrations() {
       status         ENUM('pending','confirmed','on_the_way','completed','cancelled') DEFAULT 'pending',
       total_price    DECIMAL(10,2) NOT NULL,
       travel_fee     DECIMAL(10,2) DEFAULT 25000,
-      created_at     TIMESTAMP     DEFAULT CURRENT_TIMESTAMP,
-      FOREIGN KEY (user_id)    REFERENCES users(id),
-      FOREIGN KEY (service_id) REFERENCES services(id),
-      FOREIGN KEY (barber_id)  REFERENCES barbers(id)
+      created_at     TIMESTAMP     DEFAULT CURRENT_TIMESTAMP
     )`);
     console.log('[Migration] home_services table ready.'); // v2
   } catch (e) {
