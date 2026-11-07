@@ -107,7 +107,7 @@ async function runMigrations() {
       FOREIGN KEY (service_id) REFERENCES services(id),
       FOREIGN KEY (barber_id)  REFERENCES barbers(id)
     )`);
-    console.log('[Migration] home_services table ready.');
+    console.log('[Migration] home_services table ready.'); // v2
   } catch (e) {
     console.warn('[Migration] home_services warning:', e.message);
   } finally {
